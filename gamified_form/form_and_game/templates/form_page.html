@@ -1,0 +1,24 @@
+{% extends 'content.html' %}
+{% block content %}
+<div class="container" style="margin-right:0px">
+    <div class="row">
+        <div class="col-12 d-flex flex-row justify-content-end">
+            <div style="margin-top:12px;background-color:#B6B5FF;width: 222px;
+        height: 87px;border-radius: 30px;padding:15px;z-index:5">
+                <p>frfrf</p>
+            </div>
+        </div>
+    </div>
+    <div class="row d-flex flex-row justify-content-start">
+        <div class="col-xl-10 offset-lg-0 col-xl-offset-2 col-lg-10 col-md-12 col-sm-8 offset-sm-4"
+            style="margin-top:2%;z-index:3">
+            {% block form%}{%endblock%}
+        </div>
+    </div>
+
+    <img src="../../static/casserole_3D.png"
+        style="width:275px; height:auto;transform: rotate(40deg);margin-right:30px;margin-bottom: 20px;position:fixed;bottom:0px;right:0px;margin-right:40px;z-index:1">
+</div>
+
+</div>
+{%endblock%}

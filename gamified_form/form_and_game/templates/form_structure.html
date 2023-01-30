@@ -1,0 +1,24 @@
+{%extends 'form_page.html'%}
+{%block form%}
+<div class="row">
+    <div class="d-flex flex-row justify-content-between flex-wrap">
+        <h1>{{title}}</h1>
+        <h1>{{pages_seen_indicator}}<span class="grey_progress_indicator">{{pages_left_indicator}}</span></h1>
+    </div>
+</div>
+<form method="post">
+    {%csrf_token%}
+    <div class="row">
+        <div class="flex-wrap flex-row"
+            style="color:#5C5B5B;font-size: 18px;line-height: 38px;font-family: 'Commissioner'">
+            {% block form_content%}
+            {%endblock%}
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12 d-flex flex-row justify-content-end">
+            <input class="btn-primary" type="submit">
+        </div>
+    </div>
+</form>
+{%endblock%}

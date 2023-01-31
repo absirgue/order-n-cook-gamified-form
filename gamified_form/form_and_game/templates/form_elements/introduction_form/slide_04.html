@@ -1,0 +1,12 @@
+{%extends 'form_structure.html'%}
+{%block form_content%}
+Je passe mes commandes {{form.methode_passage_commande}} {{form.frequence_passage_commande}}.
+<br> Je passe environ {{form.temps_passe_par_jour}} minutes par jour à passer des commandes. L'idéal serait d'y passer
+{{form.temps_ideal_par_jour}} minutes par jour.
+<br>Je mémorise le contenu de mes commandes fréquentes {{form.support_memorisation}}.
+<br>Mes fournisseurs m'envoient une facture par mail {{form.proportion_factures_par_mail}} des fois en moyenne.
+<br>Sur le long terme, je classe mes commandes à l'aide de {{form.methode_classement_commandes}}, mes bons de livraisons
+à l'aide de {{form.methode_classement_bons_livraison}}, et mes factures à l'aide de
+{{form.methode_classement_factures}}.
+<br>Au besoin, je transmets mes factures à ma comptabilité {{form.methode_transmission_facture}}.
+{%endblock%}

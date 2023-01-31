@@ -1,0 +1,17 @@
+{%extends 'form_structure.html'%}
+{%block form_content%}
+Actuellement, j'obtiens le résultat de mes coefficients {{form.moyen_obtention_coefficients}} sur
+{{form.support_comptablitie}}.
+Pour cela j'utilise {{form.outil_utilise}}. Ce système me permet d'obtenir ces donnés tous les
+{{form.frequence_connaissance_coefficient}}.
+<br>
+Je souhaiterais pouvoir consulter des données telles que mon coefficient et une analyse de mes achats et de mes coûts
+matières plus régulièrement {{form.souhait_plus_de_regularite}}.
+<br>
+Mon système actuel pour garder et analyser toutes ces données (coefficient, répartition des achats) me coûte
+{{form.depense_moyenne_obtention_bilan}} par mois au total.
+<br>
+Je serais prêt à dépenser {{form.depense_consentie_notre_version}} pour avoir un outil me permettant de suivre toutes
+mes factures ligne à ligne, de passer, tracer, et analyser mes commandes et la répartition de mes coûts, et de consulter
+le résultat de mon coefficient en temps réel, le tout 24h/24 7j/7.
+{%endblock%}

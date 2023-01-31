@@ -76,3 +76,16 @@ h1 {
 .default-input:placeholder-shown {
     font-style: italic;
 }
+
+.register-input {
+    border-radius: 10px;
+    border-width: 2px;
+    border-color: #B6B5FF;
+    background-color: transparent;
+    max-width: 350px;
+    margin-bottom: 5px
+}
+
+.register-input:placeholder-shown {
+    font-style: italic;
+}

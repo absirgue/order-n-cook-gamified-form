@@ -19,5 +19,13 @@ from form_and_game import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('general/', views.general_design, name='general_for_now')
+    path('introduction_form/', views.general_design, name='general_for_now'),
+    path('second_slide/', views.second_slide, name='second'),
+    path('third_slide/', views.third_slide, name='third'),
+    path('fourth_slide/', views.fourth_slide, name='fourth'),
+    path('fifth_slide/', views.fifth_slide, name='fourth'),
+    path('sixth_slide/', views.sixth_slide, name='six'),
+    path('register_player/', views.register_player, name='register_player'),
+    path('log_in/', views.log_in, name='log_in'),
+    path('log_out/', views.log_out, name='log_out')
 ]

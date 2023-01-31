@@ -64,6 +64,12 @@ class User(AbstractBaseUser, PermissionsMixin):
     def full_name_no_comma(self):
         return f"{self.first_name.lower()} {self.last_name.lower()}"
 
+    def get_group(self):
+        if self.is_administrator:
+            return "Administrator"
+        else:
+            return "Player"
+
 
 def player_directory_path(instance, filename):
     return 'pictures/{1}(id:{0})/{2}'.format(instance.user.id, instance.user.full_name(), filename)
@@ -102,29 +108,32 @@ class Player(models.Model):
 
 class CarteFormAnswer(models.Model):
     class FrequenceModificationCarte(models.TextChoices):
-        TOUTES_SEMAINES = 'Toutes les semaines'
-        TOUS_MOIS = 'Tous les mois'
-        PAR_SAISON = 'Par saison'
+        TOUTES_SEMAINES = 'Toutes les semaines', ('toutes les semaines')
+        TOUS_MOIS = 'Tous les mois', ('tous les mois')
+        PAR_SAISON = 'Par saison', ('par saison')
         AUTRES = 'Autre'
 
     class FrequenceSuggestionJour(models.TextChoices):
-        JAMAIS = "Je n'en ai fait pas"
-        TOUS_JOURS = 'Tous les jours'
-        TOUS_DEUX_JOURS = 'Tous les deux jours'
-        TOUTES_SEMAINES = 'Toutes les semaines'
+        JAMAIS = "Je n'en fais pas", ("je n'en fais pas")
+        TOUS_JOURS = 'Tous les jours', ("je les change tous les jours")
+        TOUS_DEUX_JOURS = 'Tous les deux jours', (
+            "je les change tous les deux jours")
+        TOUTES_SEMAINES = 'Toutes les semaines', (
+            "je les change toutes les semaines")
         AUTRE = 'Autre'
 
     class MethodesCalculPrix(models.TextChoices):
-        VOLEE = "A la volée"
-        PRIX_FORTS = "Avec les prix les plus fort"
-        APPROXIMATIVEMENT = "Approximativement"
+        VOLEE = "A la volée", ('à la volée')
+        PRIX_FORTS = "Avec les prix les plus fort", (
+            "avec les prix les plus fort")
+        APPROXIMATIVEMENT = "Approximativement", ("approximativement")
         AUTRE = "Autre"
         # AUTRES TYPE?
 
     class MesuresJustessePrix(models.TextChoices):
-        OUI = "Oui, suffisament juste"
+        OUI = "Oui, suffisament juste", ("oui, suffisament juste")
         NON = "Non"
-        PAS_SUR = "Pas sûr"
+        PAS_SUR = "Pas sûr", ("pas sûr")
 
     player = models.OneToOneField(
         Player, on_delete=models.SET_NULL, null=True)
@@ -135,7 +144,9 @@ class CarteFormAnswer(models.Model):
         choices=FrequenceSuggestionJour.choices, blank=False, max_length=90)
     methode_calcul_de_prix = models.CharField(
         choices=MethodesCalculPrix.choices, blank=False, max_length=90)
-    prix_trouve_justes = models.CharField(
+    prix_trouve_justes_clients = models.CharField(
+        choices=MesuresJustessePrix.choices, blank=False, max_length=90)
+    prix_trouve_justes_soi = models.CharField(
         choices=MesuresJustessePrix.choices, blank=False, max_length=90)
     gain_estime_si_plus_precis = models.IntegerField(
         default=0, validators=[MinValueValidator(limit_value=0)])
@@ -143,17 +154,18 @@ class CarteFormAnswer(models.Model):
 
 class RecetteFormAnswer(models.Model):
     class SupportsMemorisation(models.TextChoices):
-        PAPIER_VOLANT = "Sur du papier volant"
-        CARNET = "Sur un carnet"
-        EXCEL = "Excel ou autre tableur"
-        WORD = "Word ou autre éditeur"
-        INFORMATIQUEMENT = "Autre outil informatique"
+        PAPIER_VOLANT = "sur du papier volant", ("sur du papier volant")
+        CARNET = "Sur un carnet", ("sur un carnet")
+        EXCEL = "Excel ou autre tableur", ("sur Excel ou un autre tableur")
+        WORD = "Word ou autre éditeur", ("sur Word ou autre éditeur")
+        INFORMATIQUEMENT = "Autre outil informatique", (
+            "grâce à un autre outil informatique")
         AUTRE = "Autre"
 
     class MethodesTransmissionSavoir(models.TextChoices):
-        ORALEMENT = "Oralement"
-        PAPIER_VOLANT = "Sur papier volant"
-        CLASSEUR = "Dans un classeur"
+        ORALEMENT = "Oralement", ("oralement")
+        PAPIER_VOLANT = "Sur papier volant", ("sur papier volant")
+        CLASSEUR = "Dans un classeur", ("à l'aide de classeurs")
         AUTRE = "Autre"
 
     player = models.OneToOneField(
@@ -161,8 +173,8 @@ class RecetteFormAnswer(models.Model):
     support_memorisation = models.CharField(
         choices=SupportsMemorisation.choices, blank=False, max_length=90)
     satisfait_support_memorisation = models.BooleanField(default=False)
-    temps_passe_par_mois = models.IntegerField(default=0,
-                                               validators=[MinValueValidator(limit_value=0)])
+    temps_passe_par_mois = models.IntegerField(
+        validators=[MinValueValidator(limit_value=0)], blank=False)
     est_ce_trop = models.BooleanField(blank=False)
     methode_transmission_savoir = models.CharField(
         choices=MethodesTransmissionSavoir.choices, blank=False, max_length=90)
@@ -172,24 +184,26 @@ class RecetteFormAnswer(models.Model):
 
 class CommandeFormAnswer(models.Model):
     class MethodesPassageCommande(models.TextChoices):
-        TELEPHONE_DIRECT = "Par téléphone en direct"
-        TELEPHONE_REPONDEUR = "Par téléphone sur répondeur"
-        MAIL = "Par mail"
-        COMMERCIAL = "Commercial"
+        TELEPHONE_DIRECT = "Par téléphone en direct", (
+            "par téléphone, en direct")
+        TELEPHONE_REPONDEUR = "Par téléphone sur répondeur", (
+            "par téléphone, sur répondeur")
+        MAIL = "Par mail", ("par mail")
+        COMMERCIAL = "Commercial", ("en communiquant avec un commercial")
         AUTRE = "Autre"
 
     class FrequencesPassageCommande(models.TextChoices):
-        TOUS_JOURS = "Tous les jours"
-        TOUS_DEUX_JOURS = "Tous les deux jours"
-        TOUTES_SEMAINES = "Une fois par semaine"
+        TOUS_JOURS = "Tous les jours", ("tous les jours")
+        TOUS_DEUX_JOURS = "Tous les deux jours", ("tous les deux jours")
+        TOUTES_SEMAINES = "Une fois par semaine", ("une fois par semaine")
         AUTRE = "Autre"
 
     class SupportsMemorisation(models.TextChoices):
-        PAPIER_VOLANT = "Papier volant"
-        CARNET = "Carnet"
-        INFORMATIQUEMENT = "Informatiquement"
-        DE_TETE = "De tête"
-        NONE = "Pas de mémorisation"
+        PAPIER_VOLANT = "Papier volant", ("sur papier volant")
+        CARNET = "Carnet", ("sur un carnet")
+        INFORMATIQUEMENT = "Informatiquement", ("sur un support informatique")
+        DE_TETE = "De tête", ("de tête")
+        NONE = "Pas de mémorisation", ("(et non, je ne les mémorise pas)")
         AUTRE = "Autre"
 
     class MethodesClassement(models.TextChoices):
@@ -197,16 +211,16 @@ class CommandeFormAnswer(models.Model):
         # WHICH??
 
     class MethodesTransmissionFactures(models.TextChoices):
-        MAIL = "par mail"
-        PAPIER = "par papier en direct"
-        SCAN = "en les scannant"
+        MAIL = "par mail", ("par mail")
+        PAPIER = "par papier en direct", ("par papier, en direct")
+        SCAN = "en les scannant", ("en les scannant")
 
     class ProportionsFacturesParMail(models.TextChoices):
-        DE_5_A_9 = "De 5% à 9%"
-        DE_10_A_29 = "De 10% à 29%"
-        DE_30_A_49 = "De 30% à 49%"
-        DE_50_A_79 = "De 50% à 79%"
-        DE_80_A_100 = "De 80% à 100%"
+        DE_5_A_9 = "De 5% à 9%", ("de 5% à 9%")
+        DE_10_A_29 = "De 10% à 29%", ("de 10% à 29%")
+        DE_30_A_49 = "De 30% à 49%", ("de 30% à 49%")
+        DE_50_A_79 = "De 50% à 79%", ("de 50% à 79%")
+        DE_80_A_100 = "De 80% à 100%", ("de 80% à 100%")
 
     player = models.OneToOneField(
         Player, on_delete=models.SET_NULL, null=True)
@@ -234,10 +248,13 @@ class CommandeFormAnswer(models.Model):
 
 class ConnaissanceAchatFormAnswer(models.Model):
     class MethodesVerificationPaiement(models.TextChoices):
-        SIGNATURE = "Votre signature sur la facture"
-        TAMPON = "Un tampon «Bon à payer»"
-        AGRAFAGE = "Agrafage du bon de livraison avec la facture"
-        REMIS = "Remis en main propre à votre comptable"
+        SIGNATURE = "Votre signature sur la facture", ("je signe la facture")
+        TAMPON = "Un tampon «Bon à payer»", (
+            "j'appose un tampon «Bon à payer» sur la facture")
+        AGRAFAGE = "Agrafage du bon de livraison avec la facture", (
+            "j'agrafe le bon de la livraison et la facture")
+        REMIS = "Remis en main propre à votre comptable", (
+            "je les remets en main propre à mon comptable")
         AUTRE = "Autre"
 
     class PeriodesConnaissanceMoyenneAchats(models.TextChoices):
@@ -255,25 +272,36 @@ class ConnaissanceAchatFormAnswer(models.Model):
         choices=MethodesVerificationPaiement.choices, blank=False, max_length=90)
     connaissance_moyenne_chiffree_des_achats = models.CharField(
         choices=PeriodesConnaissanceMoyenneAchats.choices, blank=False, max_length=90)
-    connaissance_moyenne_des_achats = models.BooleanField(default=False)
-    connaissance_repartition_par_categorie = models.BooleanField(default=True)
-    connaissance_quantite_par_fournisseur = models.BooleanField(default=True)
-    connaissance_cout = models.BooleanField(default=True)
+    connaissance_repartition_par_categorie = models.BooleanField(default=False)
+    connaissance_quantite_par_fournisseur = models.BooleanField(default=False)
+    # connaissance_cout = models.BooleanField(default=True)
 
 
 class ComptaFormAnswer(models.Model):
+
+    class MoyensObtentionCoefficients(models.TextChoices):
+        MOI_MEME = "Moi même", ("par moi même")
+        PAR_MON_COMPTABLE = "Comptable", ("par mon comptable")
+        AUTRE = "Autre", ("autre")
+
+    class SupportsCompta(models.TextChoices):
+        TABLEUR = "Papier", ("papier")
+        PAPIER = "un Tableur", ("un tableur")
+        AUTRE = "Autre", ("autre")
+
     class FrequencesConnaissanceCoefficients(models.TextChoices):
-        SEMAINE = "Semaine"
-        DECADE = "Décade"
-        QUINZAINE = "Quinzaine"
-        MENSUELLE = "Mensuelle"
-        TRIMESTRIELLE = "Trimestrielle"
-        SEMESTRIELLE = "Semestrielle"
-        ANNUELLE = "Annuelle"
+        SEMAINE = "Semaine", ("toutes les semaines")
+        DECADE = "Décade", ("toutes les décades")
+        QUINZAINE = "Quinzaine", ("toutes les quinzaines")
+        MENSUELLE = "Mensuelle", ("tous les mois")
+        TRIMESTRIELLE = "Trimestrielle", ("tous les trimestres")
+        SEMESTRIELLE = "Semestrielle", ("tous les semestres")
+        ANNUELLE = "Annuelle", ("tous les ans.")
 
     player = models.OneToOneField(
         Player, on_delete=models.SET_NULL, null=True)
-    moyen_obtention_coefficients = models.CharField(max_length=90, blank=False)
+    moyen_obtention_coefficients = models.CharField(
+        choices=MoyensObtentionCoefficients.choices, blank=False, max_length=90)
     support_comptablitie = models.CharField(max_length=90, blank=False)
     outil_utilise = models.CharField(max_length=60, blank=True)
     frequence_connaissance_coefficient = models.CharField(

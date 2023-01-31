@@ -1,0 +1,24 @@
+{%extends 'form_page.html'%}
+{%block form%}
+<div class="row">
+    <div class="d-flex flex-row justify-content-center flex-wrap">
+        <h1>{{title}}</h1>
+    </div>
+</div>
+<form method="post">
+    {%csrf_token%}
+    <div class="row">
+        <div class="flex-wrap flex-row"
+            style="color:#5C5B5B;font-size: 18px;line-height: 38px;font-family: 'Commissioner'">
+            Salut, je suis {{user_register_form.first_name}} {{user_register_form.last_name}}. Mon restaurant s'appelle
+            {{player_register_form.restaurant_name}}.
+            <br>Mon adresse email est {{user_register_form.email}}.
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-12 d-flex flex-row justify-content-center" style="margin-top: 5%;">
+            <input class="btn-primary" type="submit" value="Je veux jouer!">
+        </div>
+    </div>
+</form>
+{%endblock%}

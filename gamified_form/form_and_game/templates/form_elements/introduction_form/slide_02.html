@@ -1,0 +1,10 @@
+{%extends 'form_structure.html'%}
+{%block form_content%}
+Je modifie ma carte {{form.frequence_modification}}. Je trouve cela suffisant {{form.rythme_trouve_suffisant}}.
+<br>Je fais des suggestions du jour {{form.frequence_suggestion_du_jour}}.
+<br>Je calcule les prix de mes plats {{form.methode_calcul_de_prix}}.
+<br>J'estime que mes prix sont juste pour mes clients {{form.prix_trouve_justes_clients}} et pour moi
+{{form.prix_trouve_justes_soi}}.
+<br>Je pense qu’un outil de suivi précis des coûts de mes recettes me permettra de gagner
+{{form.gain_estime_si_plus_precis}} euros par mois.
+{%endblock%}

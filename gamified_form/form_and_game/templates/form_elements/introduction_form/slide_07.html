@@ -1,0 +1,28 @@
+{%extends 'form_structure.html'%}
+{%block form_content%}
+Notre but chez Order n'Cook, vous créer un outil sur mesure capable de vous faire gagner du temps et de l'argent.
+Pour cela, nous aimerions connaître les 3 fonctionnalités qui égaieraient votre journée, qui simplifieraient votre
+métier,
+qui boosterait votre entreprise. <br>L'outil qui vous permettrait de vous concentrer sur l'essentiel: votre cuisine et
+vos
+clients!
+<br>
+<br>
+À toi de jouer, donc!
+<br>
+Ma fonctionnalité préférée: {{form.premiere_fonctionnalite}}
+<br>
+Ma deuxième préférence: {{form.deuxieme_fonctionnalite}}
+<br>
+(Optionnel) Celle-là est vraiment top aussi: {{form.troisieme_fonctionnalite}}
+{% if form.errors %}
+{%if form.non_field_errors%}
+<p style="color:rgb(248, 101, 160)">{{form.non_field_errors}}</p>
+{%endif%}
+{% for field in form %}
+{% for error in field.errors %}
+<p style="color:rgb(248, 101, 160)"> {{ errors }} </p>
+{% endfor %}
+{% endfor %}
+{% endif %}
+{%endblock%}

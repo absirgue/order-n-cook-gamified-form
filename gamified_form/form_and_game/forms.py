@@ -1,6 +1,35 @@
 from django import forms
 from form_and_game.models import *
 
+class FonctionnalitesPrefereesForm(forms.ModelForm):
+    class Meta:
+        model = FonctionnalitesPrefereesFormAnswer
+        fields = ['premiere_fonctionnalite', 'deuxieme_fonctionnalite', 'troisieme_fonctionnalite']
+    
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field_name in self.fields:
+            self.fields[field_name].widget.attrs.update(
+                {'class': 'default-input'})
+
+    def save(self, _user):
+        """Create a new user"""
+        super().save(commit=False)
+        answer = FonctionnalitesPrefereesFormAnswer.objects.create(
+            player=Player.objects.get(user=_user),
+            premiere_fonctionnalite=self.cleaned_data.get(
+                'premiere_fonctionnalite'),
+            deuxieme_fonctionnalite=self.cleaned_data.get(
+                'deuxieme_fonctionnalite'),
+            troisieme_fonctionnalite=self.cleaned_data.get(
+                'troisieme_fonctionnalite')
+        )
+        return answer
+
+class PasswordEditForm(forms.ModelForm):
+    class Meta:
+        model = User
+        fields = ['password']
 
 class ComptaForm(forms.ModelForm):
     class Meta:
@@ -15,6 +44,8 @@ class ComptaForm(forms.ModelForm):
                 {'class': 'default-input'})
         self.fields['outil_utilise'].widget.attrs.update(
             {'placeholder': 'nom du logiciel'})
+        self.fields['support_comptablitie'].widget.attrs.update(
+            {'placeholder': 'support de comptabilité'})
 
     def save(self, _user):
         """Create a new user"""
@@ -43,7 +74,7 @@ class ConnaissanceAchatForm(forms.ModelForm):
     class Meta:
         model = ConnaissanceAchatFormAnswer
         fields = ['analyse_ligne_a_ligne_possible', 'gain_estime_si_ligne_a_ligne', 'methode_validation_paiement',
-                  'connaissance_moyenne_chiffree_des_achats', 'connaissance_repartition_par_categorie', 'connaissance_quantite_par_fournisseur']
+                  'connaissance_moyenne_chiffree_des_achats', 'connaissance_repartition_par_categorie', 'connaissance_quantite_par_fournisseur','unite_gain_ligne_a_ligne']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -68,6 +99,8 @@ class ConnaissanceAchatForm(forms.ModelForm):
                 'connaissance_repartition_par_categorie'),
             connaissance_quantite_par_fournisseur=self.cleaned_data.get(
                 'connaissance_quantite_par_fournisseur'),
+            unite_gain_ligne_a_ligne = self.cleaned_data.get(
+                'unite_gain_ligne_a_ligne'),
         )
         return answer
 
@@ -77,7 +110,7 @@ class CommandeForm(forms.ModelForm):
         """Form options."""
         model = CommandeFormAnswer
         fields = ['methode_passage_commande', 'frequence_passage_commande', 'temps_passe_par_jour', 'temps_ideal_par_jour',
-                  'support_memorisation', 'methode_classement_commandes', 'methode_classement_bons_livraison', 'methode_classement_factures', 'methode_transmission_facture', 'proportion_factures_par_mail']
+                  'support_memorisation', 'methode_classement_commandes', 'methode_classement_bons_livraison', 'methode_classement_factures', 'methode_transmission_facture', 'proportion_factures_par_mail','nombre_fournisseurs']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -108,6 +141,8 @@ class CommandeForm(forms.ModelForm):
                 'methode_transmission_facture'),
             proportion_factures_par_mail=self.cleaned_data.get(
                 'proportion_factures_par_mail'),
+            nombre_fournisseurs =self.cleaned_data.get(
+                'nombre_fournisseurs'),
         )
         return answer
 
@@ -116,7 +151,7 @@ class RecetteForm(forms.ModelForm):
     class Meta:
         """Form options."""
         model = RecetteFormAnswer
-        fields = ['support_memorisation', 'satisfait_support_memorisation', 'temps_passe_par_mois', 'est_ce_trop',
+        fields = ['support_memorisation', 'satisfait_support_memorisation', 'temps_passe_minute_par_recette', 'est_ce_trop',
                   'methode_transmission_savoir', 'satisfait_mode_transmission']
 
     def __init__(self, *args, **kwargs):
@@ -133,7 +168,7 @@ class RecetteForm(forms.ModelForm):
             support_memorisation=self.cleaned_data.get('support_memorisation'),
             satisfait_support_memorisation=self.cleaned_data.get(
                 'satisfait_support_memorisation'),
-            temps_passe_par_mois=self.cleaned_data.get('temps_passe_par_mois'),
+            temps_passe_minute_par_recette=self.cleaned_data.get('temps_passe_minute_par_recette'),
             est_ce_trop=self.cleaned_data.get('est_ce_trop'),
             methode_transmission_savoir=self.cleaned_data.get(
                 'methode_transmission_savoir'),
@@ -142,6 +177,20 @@ class RecetteForm(forms.ModelForm):
         )
         return answer
 
+class LogInForm(forms.Form):
+    """Form enabling registered users to log in."""
+    email = forms.CharField(label="Email")
+    password = forms.CharField(label="Mot de passe", widget=forms.PasswordInput())
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field_name in self.fields:
+            self.fields[field_name].widget.attrs.update(
+                {'class': 'default-input log_in_fields'})
+        self.fields['email'].widget.attrs.update(
+            {'placeholder': 'E-mail'})
+        self.fields['password'].widget.attrs.update(
+            {'placeholder': 'Mot de passe'})
 
 class GeneralInformationForm(forms.ModelForm):
     class Meta:
@@ -194,7 +243,7 @@ class CarteForm(forms.ModelForm):
         """Form options."""
         model = CarteFormAnswer
         fields = ['frequence_modification', 'rythme_trouve_suffisant', 'frequence_suggestion_du_jour', 'methode_calcul_de_prix',
-                  'prix_trouve_justes_clients', 'prix_trouve_justes_soi', 'gain_estime_si_plus_precis']
+                  'prix_trouve_justes_clients', 'prix_trouve_justes_soi']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -219,8 +268,6 @@ class CarteForm(forms.ModelForm):
                 'prix_trouve_justes_clients'),
             prix_trouve_justes_soi=self.cleaned_data.get(
                 'prix_trouve_justes_soi'),
-            gain_estime_si_plus_precis=self.cleaned_data.get(
-                'gain_estime_si_plus_precis'),
         )
         return answer
 
@@ -243,14 +290,15 @@ class CreateEmptyUserForm(forms.ModelForm):
         self.fields['email'].widget.attrs.update(
             {'placeholder': 'Email'})
 
-    def save(self, password):
+    def save(self, password,sharing_code):
         """Create a new user"""
         super().save(commit=False)
         user = User.objects.create_user(
             email=self.cleaned_data.get('email'),
             first_name=self.cleaned_data.get('first_name'),
             last_name=self.cleaned_data.get('last_name'),
-            password=password
+            password=password,
+            sharing_code = sharing_code
         )
         return user
 

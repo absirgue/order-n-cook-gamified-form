@@ -1,0 +1,212 @@
+{% extends 'form_content.html' %}
+{% block content %}
+<div class="row" style="margin-right:0px">
+    <div class="row" style="padding-right:0px">
+        <div class="col-12 d-flex flex-row justify-content-between" style="padding-right:0px;z-index: 3;">
+            <form method="post">
+                {%csrf_token%}
+                <input
+                    style="font-family: 'JetBrains Mono';font-size: 14px;color:#5C5B5B;text-decoration: underline;background-color: transparent;border-width: 0px;margin-top:1%;height:20px;margin-left:1%"
+                    type="submit" name="log_out" value="< Quitter">
+            </form>
+            {% include 'partials/player_profile.html'%}
+        </div>
+    </div>
+    <div class="row d-flex flex-row justify-content-between" style="padding-right:0px;">
+        <div class="col-6 p-4 d-flex flex-column justify-content-start" style="z-index: 3;">
+            <div class="p-3" style="border-radius:40px;background-color:white">
+                <h1 style="text-align: center;">🏆 CLASSEMENT</h1>
+                {% for ranked_player in ranking%}
+                {% if ranked_player.represents_multiple%}
+                <div class="d-flex flex-row justify-content-center" style="font-family: 'Commissioner';color:#5C5B5B">
+                    <p class="col-1" style="font-size:18px"></p>
+                    <p class="col-4"></p>
+                    <p class="col-4" style="font-size:30px;line-height: 5px">...</p>
+                    <p class="col-3" style="text-align:end"></p>
+
+                </div>
+                {%else %}
+                {% if ranked_player.is_user %}
+                <div class="d-flex flex-row justify-content-between"
+                    style="font-family: 'Commissioner';color:#4846FF;font-weight: 800;">
+                    <p class="col-1" style="font-size:18px">{{ranked_player.rank_symbol}}</p>
+                    <p class="col-4">{{ranked_player.first_name}}</p>
+                    <p class="col-4">{{ranked_player.city}}</p>
+                    <p class="col-3" style="text-align:end">{{ranked_player.points}} pts</p>
+                </div>
+                {%else%}
+                <div class="d-flex flex-row justify-content-between" style="font-family: 'Commissioner';color:#5C5B5B">
+                    <p class="col-1" style="font-size:18px">{{ranked_player.rank_symbol}}</p>
+                    <p class="col-4">{{ranked_player.first_name}}</p>
+                    <p class="col-4">{{ranked_player.city}}</p>
+                    <p class="col-3" style="text-align:end">{{ranked_player.points}} pts</p>
+                </div>
+                {%endif%}
+                {%endif%}
+
+                {%endfor%}
+            </div>
+        </div>
+        <div class="col-6 p-5 d-flex flex-column justify-content-start" style="z-index: 3;">
+            <div class="p-3 pb-1" style="border-radius:40px;background-color:white;margin-top: 13%;">
+                <h1 style="text-align: center;margin-bottom: 5px;">🚀 MARQUEZ DES POINTS</h1>
+                <div class="col-12 d-flex flex-row justify-content-center">
+                    <p
+                        style="color:#5C5B5B;font-size: 18px;font-family: 'Commissioner';margin-top: 2%;max-width: 550px;text-align: center;margin-bottom: 10px;">
+                        <span style="font-weight:800;color:#4846FF">Vous êtes à {{points_to_gain_a_spot}} points</span>
+                        de
+                        grimper au classement et
+                        à
+                        {{points_to_win}} de <span style="font-weight:800;color:#4846FF">gagner 50% de réduction
+                            pour les 6
+                            premiers mois</span> sur notre plateforme!
+                    </p>
+                </div>
+                <div class="col-12 d-flex flex-row justify-content-start align-items-end" style="margin-left:5%">
+                    <button type="button" class="btn-secondary-small" data-bs-toggle="modal"
+                        data-bs-target="#link_copy_modal">Partager (+100
+                        pts)</button>
+                    <p style="margin-bottom:0px;color:#5C5B5B;font-family: 'JetBrains Mono';font-size:14px">5 sec.</p>
+                </div>
+                {%if player.needs_precising%}
+                <form method="post">
+                    {%csrf_token%}
+                    <div class="col-12 d-flex flex-row justify-content-start align-items-end"
+                        style="margin-left:5%;margin-top:15px">
+                        <input type="submit" class="btn-secondary-small"
+                            value="Préciser certaines réponses (+{{number_of_points_with_autres_form}}pts)"
+                            name="precise_answers" />
+                        <p style="margin-bottom:0px;color:#5C5B5B;font-family: 'JetBrains Mono';font-size:14px">
+                            {{time_for_autres_form}}
+                        </p>
+                    </div>
+                </form>
+                {%endif%}
+                <form method="post">
+                    {%csrf_token%}
+                    <div class="col-12 d-flex flex-row justify-content-start align-items-end"
+                        style="margin-left:5%;margin-top:15px">
+                        <input type="submit" class="btn-secondary-small" value="Plannifier un appel (+600pts)"
+                            name="schedule_call" />
+                        <p style="margin-bottom:0px;color:#5C5B5B;font-family: 'JetBrains Mono';font-size:14px">30 sec.
+                        </p>
+                    </div>
+                </form>
+                <form method="post" class="d-flex flex-row justify-content-end" style="margin-top:30px">
+                    {%csrf_token%}
+                    <input class="discrete_button" type="submit" name="conditions"
+                        value="Conditions générales d'utilisation">
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="link_copy_modal">
+    <div class="modal-dialog" style="max-width:800px;">
+        <div class="modal-content" style="border-width: 2px;border-radius: 40px;border-color: #4846FF;">
+            <form method="post">
+                {%csrf_token%}
+                <div class="modal-body" style="padding-top:5%">
+                    <div class="row d-flex flex-row justify-content-end">
+                        <div class="col-12 d-flex flex-column justify-content-center">
+                            <h1 style="text-align:center;margin-bottom: 3px;">🏆 PARTAGEZ VOS PERFORMANCES!</h1>
+                            <p
+                                style="margin-top:0px;color:#5C5B5B;font-size: 18px;font-family: 'Commissioner';margin-top: 2%;max-width: 800px;text-align: center;margin-bottom: 0px;">
+                                Transmettez simplement ce lien à vos collègues dans la restauration qui pourront vous
+                                féciliter, vous payer un pot, et valider vos points bonus!</p>
+                            <div class="col-12 d-flex flex-row justify-content-center">
+                                <button type="button" onclick="CopyText()" class="btn-secondary"
+                                    style="max-width:350px;margin-top:10px">Copier le lien</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row d-flex flex-row justify-content-end">
+                        <p
+                            style="margin-top:0px;color:#5C5B5B;font-size: 18px;font-family: 'Commissioner';margin-top: 2%;max-width: 800px;margin-bottom: 0px;">
+                            Vous préferez qu'on s'occupe d'envoyer un e-mail ?</p>
+                        <div class="col-12 d-flex flex-row justify-content-center">
+                            <form method="post">
+                                <input style="width:35%;margin-right:10px" type="text" name="email"
+                                    class="default-input" placeholder="E-mail" required>
+                                <input type="submit" name="send_email" class="btn-secondary-small" value="Envoyez!">
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="new_password_modal" data-backdrop="static" tabindex="-1" role="dialog">
+    <div class="modal-dialog" style="max-width:800px;">
+        <div class="modal-content" style="border-width: 2px;border-radius: 40px;border-color: #4846FF;">
+            <form method="post">
+                {%csrf_token%}
+                <div class="modal-body" style="padding-top:5%">
+                    <div class="row d-flex flex-row justify-content-end">
+                        <div class="col-12 d-flex flex-column justify-content-center">
+                            <h1 style="text-align:center;margin-bottom: 3px;">👋 BIENVENUE DANS LE JEU!</h1>
+                            <div class="row">
+                                <div class="col-6 d-flex flex-column" style="margin-left:10px">
+                                    <p
+                                        style="margin-top:0px;color:#5C5B5B;font-size: 18px;font-family: 'Commissioner';margin-top: 2%;max-width: 800px;margin-bottom: 0px;">
+                                        Créez-vous un mot de passe simplement:</p>
+                                    <input type="password" class="other-form-input" placeholder="Mot de Passe"
+                                        name="password" required />
+                                    <input type="password" class="other-form-input" placeholder="Confirmation"
+                                        name="confirmation" required />
+                                    <div class="d-flex flex-row"
+                                        style="margin-left:3%;margin-top:3%;padding-left: 0px;">
+                                        <input type="checkbox" class="default-input" style="width:auto"
+                                            name="accept_conditions" required />
+                                        <div class="d-flex flex-row justify-content-start align-items-baseline">
+                                            <p
+                                                style="width:auto;padding:0px;margin:0px;margin-left:5px;padding-left:0px">
+                                                J'accepte les
+                                            </p>
+                                            <button onclick="location.href = '/conditions_generales'"
+                                                class="discrete_button" type="button" name="conditions"
+                                                style="width:auto;margin-left:0px;padding-left:3px" value="">Conditions
+                                                d'Utilisation</button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-5 d-flex flex-column justify-content-center align-items-end">
+                                    <input type="submit" class="btn-primary" style="max-width:350px;margin-top:10px"
+                                        name="change_mdp" value="Rejoindre la partie">
+                                    {%if mdp_error%}
+                                    <p
+                                        style="margin-top:0px;color:#f44c4c;font-size: 18px;font-family: 'Commissioner';margin-top: 2%;max-width: 800px;margin-bottom: 0px;">
+                                        {{mdp_error}}</p>
+                                    {%endif%}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% block scripts %}
+<script>
+    function CopyText() {
+        if (navigator && navigator.clipboard && navigator.clipboard.writeText)
+            return navigator.clipboard.writeText("{{url_to_copy}}");
+    }
+</script>
+{% if has_to_change_pwd%}
+<script src="//ajax.aspnetcdn.com/ajax/jQuery/jquery-2.1.1.js" type="text/javascript"></script>
+<script type="text/javascript">
+    $(window).load(function () {
+        $('#new_password_modal').modal('show');
+    });
+</script>
+{%endif%}
+{% endblock scripts %}
+
+{%endblock%}

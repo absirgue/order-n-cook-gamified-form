@@ -13,6 +13,9 @@ class User(AbstractBaseUser, PermissionsMixin):
     last_name = models.CharField(max_length=20, blank=False)
     email = models.EmailField(unique=True, blank=False)
     reset_password_token = models.CharField(max_length=100, blank=True)
+    accepted_conditions = models.BooleanField(default=False)
+    sharing_code = models.CharField(max_length=20, blank=False)
+    randomly_created = models.BooleanField(default=False)
     is_active = models.BooleanField(
         ('active'),
         default=True,
@@ -62,10 +65,14 @@ class User(AbstractBaseUser, PermissionsMixin):
         return self.is_superuser or self.is_staff
 
     def full_name_no_comma(self):
-        return f"{self.first_name.lower()} {self.last_name.lower()}"
+        full_name = f"{self.first_name.lower()} {self.last_name.lower()}"
+        return ' '.join(elem.capitalize() for elem in full_name.split())
 
     def get_group(self):
-        if self.is_administrator:
+        if self.is_administrator():
+            print(f"SUPER {self.is_superuser}")
+            print(f"STAFF {self.is_staff}")
+            print("IS ADMIN")
             return "Administrator"
         else:
             return "Player"
@@ -92,26 +99,42 @@ class Player(models.Model):
     points = models.IntegerField(default=0, validators=[
                                  MinValueValidator(limit_value=0)])
     is_validated = models.BooleanField(default=False)
+    needs_precising = models.BooleanField(default=True)
+    was_added_precision_points = models.BooleanField(default=False)
+    booked_phone_call = models.BooleanField(default=False)
 
-    def get_badge(self):
-        max_score = 0
+    def get_status(self):
+        min_score = 100000
         user_badge = ""
         for badge in BADGES:
-            if badge["max_points"] < self.points and badge["max_points"] > max_score:
-                max_score = badge["max_points"]
-                user_badge = badge
+            if BADGES[badge]["max_points"] > self.points and BADGES[badge]["max_points"] < min_score:
+                min_score = BADGES[badge]["max_points"]
+                user_badge = BADGES[badge]
         return user_badge
 
-    def get_badge_icon(self):
-        return BADGES[self.get_badge()]["icon"]
+    def get_badge(self):
+        return self.get_status()['icon']
+    
+    def get_status_name(self):
+        status_name = self.get_status()['title']
+        return ' '.join(elem.capitalize() for elem in status_name.split())
 
+    def get_progress_percentage(self):
+        return self.points*100/self.get_status()["max_points"]
+
+class SharingAlert(models.Model):
+    user = models.ForeignKey(
+        User,on_delete=models.SET_NULL,null=True)
+    text = models.CharField(max_length=100,blank=False)
+    was_shared = models.BooleanField(default=False)
 
 class CarteFormAnswer(models.Model):
     class FrequenceModificationCarte(models.TextChoices):
+        TOUS_JOURS = 'Tous les jours', ('tous les jours')
         TOUTES_SEMAINES = 'Toutes les semaines', ('toutes les semaines')
         TOUS_MOIS = 'Tous les mois', ('tous les mois')
         PAR_SAISON = 'Par saison', ('par saison')
-        AUTRES = 'Autre'
+        AUTRES = 'Autre',("autre")
 
     class FrequenceSuggestionJour(models.TextChoices):
         JAMAIS = "Je n'en fais pas", ("je n'en fais pas")
@@ -120,7 +143,7 @@ class CarteFormAnswer(models.Model):
             "je les change tous les deux jours")
         TOUTES_SEMAINES = 'Toutes les semaines', (
             "je les change toutes les semaines")
-        AUTRE = 'Autre'
+        AUTRE = 'Autre',("autre")
 
     class MethodesCalculPrix(models.TextChoices):
         VOLEE = "A la volée", ('à la volée')
@@ -131,15 +154,21 @@ class CarteFormAnswer(models.Model):
         # AUTRES TYPE?
 
     class MesuresJustessePrix(models.TextChoices):
-        OUI = "Oui, suffisament juste", ("oui, suffisament juste")
-        NON = "Non"
+        OUI = "Oui, suffisament juste", ("oui, suffisament justes")
+        NON = "Non",("non")
         PAS_SUR = "Pas sûr", ("pas sûr")
+    
+    class OUIouNON(models.TextChoices):
+        OUI = "oui",("oui")
+        NON = "non",("non")
+
 
     player = models.OneToOneField(
         Player, on_delete=models.SET_NULL, null=True)
     frequence_modification = models.CharField(
         choices=FrequenceModificationCarte.choices, blank=False, max_length=90)
-    rythme_trouve_suffisant = models.BooleanField(default=False)
+    rythme_trouve_suffisant = models.CharField(
+        choices=OUIouNON.choices, blank=False, max_length=90)
     frequence_suggestion_du_jour = models.CharField(
         choices=FrequenceSuggestionJour.choices, blank=False, max_length=90)
     methode_calcul_de_prix = models.CharField(
@@ -148,8 +177,6 @@ class CarteFormAnswer(models.Model):
         choices=MesuresJustessePrix.choices, blank=False, max_length=90)
     prix_trouve_justes_soi = models.CharField(
         choices=MesuresJustessePrix.choices, blank=False, max_length=90)
-    gain_estime_si_plus_precis = models.IntegerField(
-        default=0, validators=[MinValueValidator(limit_value=0)])
 
 
 class RecetteFormAnswer(models.Model):
@@ -160,25 +187,33 @@ class RecetteFormAnswer(models.Model):
         WORD = "Word ou autre éditeur", ("sur Word ou autre éditeur")
         INFORMATIQUEMENT = "Autre outil informatique", (
             "grâce à un autre outil informatique")
-        AUTRE = "Autre"
+        AUTRE = "Autre",("autre")
 
     class MethodesTransmissionSavoir(models.TextChoices):
         ORALEMENT = "Oralement", ("oralement")
         PAPIER_VOLANT = "Sur papier volant", ("sur papier volant")
         CLASSEUR = "Dans un classeur", ("à l'aide de classeurs")
-        AUTRE = "Autre"
+        AUTRE = "Autre",("autre")
+    
+    class OUIouNON(models.TextChoices):
+        OUI = "oui",("oui")
+        NON = "non",("non")
+
 
     player = models.OneToOneField(
         Player, on_delete=models.SET_NULL, null=True)
     support_memorisation = models.CharField(
         choices=SupportsMemorisation.choices, blank=False, max_length=90)
-    satisfait_support_memorisation = models.BooleanField(default=False)
-    temps_passe_par_mois = models.IntegerField(
+    satisfait_support_memorisation =models.CharField(
+        choices=OUIouNON.choices, blank=False, max_length=90)
+    temps_passe_minute_par_recette = models.IntegerField(
         validators=[MinValueValidator(limit_value=0)], blank=False)
-    est_ce_trop = models.BooleanField(blank=False)
+    est_ce_trop = models.CharField(
+        choices=OUIouNON.choices, blank=False, max_length=90)
     methode_transmission_savoir = models.CharField(
         choices=MethodesTransmissionSavoir.choices, blank=False, max_length=90)
-    satisfait_mode_transmission = models.BooleanField(default=False)
+    satisfait_mode_transmission = models.CharField(
+        choices=OUIouNON.choices, blank=False, max_length=90)
     # COMMENT ON MESURE LE TURNOVER?
 
 
@@ -206,9 +241,20 @@ class CommandeFormAnswer(models.Model):
         NONE = "Pas de mémorisation", ("(et non, je ne les mémorise pas)")
         AUTRE = "Autre"
 
-    class MethodesClassement(models.TextChoices):
+    class MethodesClassementAutres(models.TextChoices):
+        CLASSEUR = "classeur"
+        TRIEUR = "trieur"
+        ORDINATEUR = "ordinateur"
+        COMPTABILITE = "comptabilite", ("envoi à la comptabilité en direct")
+        NON_CONSERVEES = "non gardées", ("(je ne les garde pas)")
         AUTRE = "Autre"
-        # WHICH??
+    
+    class MethodesClassementFactures(models.TextChoices):
+        CLASSEUR = "classeur"
+        TRIEUR = "trieur"
+        ORDINATEUR = "ordinateur"
+        COMPTABILITE = "comptabilite", ("envoi à la comptabilité en direct")
+        AUTRE = "Autre"
 
     class MethodesTransmissionFactures(models.TextChoices):
         MAIL = "par mail", ("par mail")
@@ -216,11 +262,11 @@ class CommandeFormAnswer(models.Model):
         SCAN = "en les scannant", ("en les scannant")
 
     class ProportionsFacturesParMail(models.TextChoices):
-        DE_5_A_9 = "De 5% à 9%", ("de 5% à 9%")
-        DE_10_A_29 = "De 10% à 29%", ("de 10% à 29%")
-        DE_30_A_49 = "De 30% à 49%", ("de 30% à 49%")
-        DE_50_A_79 = "De 50% à 79%", ("de 50% à 79%")
-        DE_80_A_100 = "De 80% à 100%", ("de 80% à 100%")
+        DE_5_A_9 = "De 5% à 9%", ("De 5% à 9%")
+        DE_10_A_29 = "De 10% à 29%", ("De 10% à 29%")
+        DE_30_A_49 = "De 30% à 49%", ("De 30% à 49%")
+        DE_50_A_79 = "De 50% à 79%", ("De 50% à 79%")
+        DE_80_A_100 = "De 80% à 100%", ("De 80% à 100%")
 
     player = models.OneToOneField(
         Player, on_delete=models.SET_NULL, null=True)
@@ -235,15 +281,17 @@ class CommandeFormAnswer(models.Model):
     support_memorisation = models.CharField(
         choices=SupportsMemorisation.choices, blank=False, max_length=90)
     methode_classement_commandes = models.CharField(
-        choices=MethodesClassement.choices, blank=False, max_length=90)
+        choices=MethodesClassementAutres.choices, blank=False, max_length=90)
     methode_classement_bons_livraison = models.CharField(
-        choices=MethodesClassement.choices, blank=False, max_length=90)
+        choices=MethodesClassementAutres.choices, blank=False, max_length=90)
     methode_classement_factures = models.CharField(
-        choices=MethodesClassement.choices, blank=False, max_length=90)
+        choices=MethodesClassementFactures.choices, blank=False, max_length=90)
     methode_transmission_facture = models.CharField(
         choices=MethodesTransmissionFactures.choices, blank=False, max_length=90)
     proportion_factures_par_mail = models.CharField(
         choices=ProportionsFacturesParMail.choices, blank=False, max_length=90)
+    nombre_fournisseurs = models.IntegerField(
+        validators=[MinValueValidator(limit_value=0)], blank=False)
 
 
 class ConnaissanceAchatFormAnswer(models.Model):
@@ -258,23 +306,37 @@ class ConnaissanceAchatFormAnswer(models.Model):
         AUTRE = "Autre"
 
     class PeriodesConnaissanceMoyenneAchats(models.TextChoices):
-        SEMAINE = "Par semaine"
-        DECADE = "Par décade"
-        MOIS = "Par mois"
-        AUTRE = "Autre"
+        SEMAINE = "Par semaine",("par semaine")
+        DECADE = "Par décade",("par décade")
+        MOIS = "Par mois",("par mois")
+        AUTRE = "Autre",("autre")
+    
+    class UnitesGainLigneALigne(models.TextChoices):
+        JOUR = "jour",("jour")
+        SEMAINE = "semaine",("semaine")
+        DECADE = "décade",("décade")
+        MOIS = "mois",("mois")
+        ANNEE = "année",("année")
+
+    class OUIouNON(models.TextChoices):
+        OUI = "oui",("oui")
+        NON = "non",("non")
 
     player = models.OneToOneField(
         Player, on_delete=models.SET_NULL, null=True)
-    analyse_ligne_a_ligne_possible = models.BooleanField(default=False)
-    gain_estime_si_ligne_a_ligne = models.IntegerField(
-        default=0, validators=[MinValueValidator(limit_value=0)])
+    analyse_ligne_a_ligne_possible = models.CharField(
+        choices=OUIouNON.choices, blank=False, max_length=90)
+    gain_estime_si_ligne_a_ligne = models.IntegerField(validators=[MinValueValidator(limit_value=0)])
     methode_validation_paiement = models.CharField(
         choices=MethodesVerificationPaiement.choices, blank=False, max_length=90)
     connaissance_moyenne_chiffree_des_achats = models.CharField(
         choices=PeriodesConnaissanceMoyenneAchats.choices, blank=False, max_length=90)
-    connaissance_repartition_par_categorie = models.BooleanField(default=False)
-    connaissance_quantite_par_fournisseur = models.BooleanField(default=False)
-    # connaissance_cout = models.BooleanField(default=True)
+    connaissance_repartition_par_categorie =  models.CharField(
+        choices=OUIouNON.choices, blank=False, max_length=90)
+    connaissance_quantite_par_fournisseur =  models.CharField(
+        choices=OUIouNON.choices, blank=False, max_length=90)
+    unite_gain_ligne_a_ligne = models.CharField(
+        choices=UnitesGainLigneALigne.choices, blank=False, max_length=90)
 
 
 class ComptaFormAnswer(models.Model):
@@ -298,6 +360,18 @@ class ComptaFormAnswer(models.Model):
         SEMESTRIELLE = "Semestrielle", ("tous les semestres")
         ANNUELLE = "Annuelle", ("tous les ans.")
 
+    class OUIouNON(models.TextChoices):
+        OUI = "oui",("oui")
+        NON = "non",("non")
+
+    class UnitesCoutSystemeActuel(models.TextChoices):
+        MOIS = "mois"
+        AN = "an"
+        VACATION = "vacation"
+        UTILISATION = "utilisation"
+        TRIMESTRE = "trimestre"
+        AUTRE = "autre"
+
     player = models.OneToOneField(
         Player, on_delete=models.SET_NULL, null=True)
     moyen_obtention_coefficients = models.CharField(
@@ -306,31 +380,44 @@ class ComptaFormAnswer(models.Model):
     outil_utilise = models.CharField(max_length=60, blank=True)
     frequence_connaissance_coefficient = models.CharField(
         choices=FrequencesConnaissanceCoefficients.choices, blank=False, max_length=90)
-    souhait_plus_de_regularite = models.BooleanField(blank=False)
+    souhait_plus_de_regularite = models.CharField(
+        choices=OUIouNON.choices, blank=False, max_length=90)
     depense_moyenne_obtention_bilan = models.IntegerField(
         validators=[MinValueValidator(limit_value=0)], blank=False)
+    unite_cout_optention_bilan = models.CharField(
+        choices=UnitesCoutSystemeActuel.choices, blank=False, max_length=90)
     depense_consentie_notre_version = models.IntegerField(
         validators=[MinValueValidator(limit_value=0)], blank=False)
 
 
 class FonctionnalitesPrefereesFormAnswer(models.Model):
     class Fonctionnalites(models.TextChoices):
-        SEMAINE = "Semaine"
-        DECADE = "Décade"
-        QUINZAINE = "Quinzaine"
-        MENSUELLE = "Mensuelle"
-        TRIMESTRIELLE = "Trimestrielle"
-        SEMESTRIELLE = "Semestrielle"
-        ANNUELLE = "Annuelle"
+        COMMANDES_FOURNISSEURS = "Gestion des Commandes et Catalogues fournisseurs",("Gestion des Commandes et Catalogues fournisseurs")
+        RECEPTION_AVOIRS = "Gestion de la réception des Commandes et des Avoirs",("Gestion de la réception des Commandes et des Avoirs")
+        RECETTES = "Outil d'écriture et de stockage des recettes avec capacité de les partager aux membres de la cuisine ", ("Outil d'écriture et de stockage des recettes avec capacité de les partager aux membres de la cuisine ")
+        SCAN = "Scan intelligent des bons de réception/factures pour automatiser leur analyse ligne à ligne", ("Scan intelligent des bons de réception/factures pour automatiser leur analyse ligne à ligne")
+        DONNEES_TEMPS_REEL = "Accès en temps réel à des données sur la masse et la répartition sur plusieurs critères des dépenses matière",("Accès en temps réel à des données sur la masse et la répartition sur plusieurs critères des dépenses matière")
+        CALCUL_MARGE_COEFF = "Calculateur intelligent de votre marge et de votre coefficient",("Calculateur intelligent de votre marge et de votre coefficient")
+        CALCUL_COUT_TOTAL = "Calculateur du coût total d'une recette en se basant sur le salaire horaire moyen",("Calculateur du coût total d'une recette en se basant sur le salaire horaire moyen")
+        SUIVI_ALERTES = "Suivi et alerte en temps réel et depuis votre mobile de la rentabilité d'une recette", ("Suivi et alerte en temps réel et depuis votre mobile de la rentabilité d'une recette")
+        CALCUL_PRIX_VENTE ="Aide au calcul du bon prix de vente d'une recette",("Aide au calcul du bon prix de vente d'une recette")
+        AIDE_CREATIVITE = "Aide à la créativité en proposant une interface indiquant les produits de saison",("Aide à la créativité en proposant une interface indiquant les produits de saison")
+        EVOLUTION_PRIX = "Capacité à suivre l'évolution des prix d'un produit sur l'année", ("Capacité à suivre l'évolution des prix d'un produit sur l'année")
+        INTERFACE_CLIENT = "Création d'une interface pour les clients permettant de consulter les allergènes et l'origine des produits d'une recette",("Création d'une interface pour les clients permettant de consulter les allergènes et l'origine des produits d'une recette")
+        INVENTAIRE = "Aide à la réalisation d'un inventaire",("Aide à la réalisation d'un inventaire")
+        HYGIENE = "Aide au respect des règles d'hygiène",("Aide au respect des règles d'hygiène")
+        TURNOVER = "Prémunission au turnover en sauvegardant vos recette, transmission du savoir",("Prémunission au turnover en sauvegardant vos recette, transmission du savoir")
+        GESTION_LINGE = "Gestion du linge",("Gestion du linge")
+
 
     player = models.OneToOneField(
         Player, on_delete=models.SET_NULL, null=True)
     premiere_fonctionnalite = models.CharField(
-        choices=Fonctionnalites.choices, blank=False, max_length=90)
+        choices=Fonctionnalites.choices, blank=False, max_length=125)
     deuxieme_fonctionnalite = models.CharField(
-        choices=Fonctionnalites.choices, blank=False, max_length=90)
+        choices=Fonctionnalites.choices, blank=False, max_length=125)
     troisieme_fonctionnalite = models.CharField(
-        choices=Fonctionnalites.choices, blank=False, max_length=90)
+        choices=Fonctionnalites.choices, blank=True, max_length=125)
 
     def clean(self):
         if self.premiere_fonctionnalite == self.deuxieme_fonctionnalite or self.deuxieme_fonctionnalite == self.troisieme_fonctionnalite or self.troisieme_fonctionnalite == self.premiere_fonctionnalite:
@@ -341,11 +428,11 @@ class FonctionnalitesPrefereesFormAnswer(models.Model):
 class GeneralIntroductionFormAnswer(models.Model):
     class Metiers(models.TextChoices):
         CHEF_PROPRIETAIRE = "Chef de cuisine et pâtissier propriétaire", (
-            "Chef de cuisine et pâtissier propriétaire")
+            "chef de cuisine et pâtissier propriétaire")
         CHEF_SALARIE_ACTIONNAIRE = "Chef de cuisine et pâtissier salarié actionnaire", (
-            "Chef de cuisine et pâtissier salarié actionnaire")
+            "chef de cuisine et pâtissier salarié actionnaire")
         CHEF_SALARIE = "Chef de cuisine et pâtissier salarié", (
-            "Chef de cuisine et pâtissier salarié")
+            "chef de cuisine et pâtissier salarié")
 
     player = models.OneToOneField(
         Player, on_delete=models.SET_NULL, null=True)
@@ -366,3 +453,13 @@ class GeneralIntroductionFormAnswer(models.Model):
                                               validators=[MinValueValidator(limit_value=0)], blank=False, max_digits=5)
     nombre_etablissements = models.IntegerField(
         default=1, validators=[MinValueValidator(limit_value=1)])
+
+class ExtraInformation(models.Model):
+    player = models.ForeignKey(
+        Player, on_delete=models.SET_NULL, null=True)
+    field_title = models.CharField(max_length=150)
+    answer = models.TextField()
+
+class CallDemand(models.Model):
+    player = models.ForeignKey(
+        Player, on_delete=models.SET_NULL, null=True)

@@ -1,0 +1,37 @@
+{%extends 'base.html'%}
+{% block body %}
+<div class="row" style="margin-right:0px;">
+    <div class="row" style="padding-right:0px">
+        <div class="col-12 d-flex flex-row justify-content-between" style="padding-right:0px;z-index: 3;">
+            <form method="post">
+                {%csrf_token%}
+                <input
+                    style="font-family: 'JetBrains Mono';font-size: 14px;color:#5C5B5B;text-decoration: underline;background-color: transparent;border-width: 0px;margin-top:1%;height:20px;margin-left:1%"
+                    type="submit" name="quit" value="< Quitter">
+            </form>
+            {% include 'partials/player_profile.html'%}
+        </div>
+    </div>
+    <div class="row d-flex flex-row justify-content-center">
+        {%for content in questions%}
+        <div class="col-8 d-flex flex-column justify-content-start"
+            style="background-color: white; border-radius: 40px;margin-bottom:30px;padding:15px;padding-left:25px">
+            <h1 style="margin-bottom: 5px;padding-bottom: 0px;margin-top: 15px;">{{content.title}}</h1>
+            <form method="post">
+                {%csrf_token%}
+                {%for question_to_ask in content.questions%}
+                <p style="margin-bottom: 2px;margin-top:20px;font-family: 'Commissioner';">{{question_to_ask.question}}
+                </p>
+                <textarea type="text" name="{{question_to_ask.question_title}}" placeholder="Votre réponse"
+                    style="border-color:#B6B5FF;width:100%;border-width: 2px;min-height:80px;font-family: 'Commissioner'"></textarea>
+                {%endfor%}
+                <div class="col-12 d-flex flex-row justify-content-end">
+                    <input type="submit" value="Enregistrer" name="{{content.title}}" class="btn-primary"
+                        style="margin-top: 15px;" />
+                </div>
+            </form>
+        </div>
+        {%endfor%}
+    </div>
+</div>
+{%endblock%}

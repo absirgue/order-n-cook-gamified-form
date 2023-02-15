@@ -1,10 +1,20 @@
 {%extends 'form_structure.html'%}
 {%block form_content%}
-Je suis {{form.metier}} à {{form.ville}}, j'ai {{form.age}} et je suis dans mon
+Je suis {{form.metier}} à {{form.ville}}, j'ai {{form.age}} ans et je suis dans mon
 métier depuis {{form.experience}} ans.
 <br>L'établissement dans lequel je travaille fait {{form.nombre_couverts}} couverts en moyenne pour
 {{form.nombre_places}}
 places avec {{form.nombre_cuisiniers}} cuisiniers.
 <br>Notre assiette moyenne coûte {{form.prix_moyen_assiette}} euros.
 <br>Nous avons {{form.nombre_etablissements}} établissement.
+{% if form.errors %}
+{%if form.non_field_errors%}
+<p style="color:rgb(248, 101, 160)">{{form.non_field_errors}}</p>
+{%endif%}
+{% for field in form %}
+{% for error in field.errors %}
+<p style="color:rgb(248, 101, 160)"> {{ errors }} </p>
+{% endfor %}
+{% endfor %}
+{% endif %}
 {%endblock%}

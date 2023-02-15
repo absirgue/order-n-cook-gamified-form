@@ -1,0 +1,49 @@
+{%extends 'form_page_introduction_conclusion.html'%}
+{%block form%}
+<div class="row">
+    <div class="d-flex flex-row justify-content-center flex-wrap">
+        <h1 style="margin-bottom:5px">{{title}}</h1>
+    </div>
+    <div class="d-flex flex-col justify-content-center flex-wrap align-items-center" style="margin-top:1%">
+        <p style="color:#5C5B5B;font-size: 18px;font-family: 'Commissioner';max-width: 800px;text-align: center;">Le
+            temps passé sur ce
+            formulaire est un
+            bon
+            investissement, nous allons construire
+            un produit sur mesure pour VOS besoins!</p>
+        <form method="post">
+            {%csrf_token%}
+            <input class="btn-secondary btn-lg" type="submit" name="rappel"
+                value="Prévenez-moi à la sortie du produit! " />
+        </form>
+    </div>
+    <div class="d-flex flex-row justify-content-center flex-wrap">
+        <p
+            style="color:#5C5B5B;font-size: 18px;font-family: 'Commissioner';margin-top: 2%;max-width: 800px;text-align: center;margin-bottom: 0px;">
+            En plus, vous avez aquéris
+            le statut de
+            {{player.get_badge}}{{player.get_status_name}}{{player.get_badge}} et vous êtes actuellement <span
+                style="font-weight:800;color:#4846FF">{{player_classement}}</span> au classement avec <span
+                style="font-weight:800;color:rgb(44, 44, 44)">{{player.points}}</span> points.</p>
+    </div>
+    <div class="d-flex flex-row justify-content-end flex-wrap">
+        <button type="button" class="btn-secondary-small" data-bs-toggle="modal"
+            data-bs-target="#link_copy_modal">Partager (+100
+            pts)</button>
+    </div>
+    <div class="d-flex flex-row justify-content-center flex-wrap">
+        <p style="color:#5C5B5B;font-size: 18px;font-family: 'Commissioner';max-width: 800px;text-align: center;">
+            À <span style="font-weight:800;color:#4846FF">gagner</span>: <span
+                style="font-weight:800;color:rgb(44, 44, 44)">50% de réduction pour les 6 premiers mois</span> sur
+            la plateforme <span style="font-weight:800;color:rgb(44, 44, 44)">pour les 5 premiers!</span></p>
+    </div>
+    <div class="row">
+        <div class="col-12 d-flex flex-row justify-content-center">
+            <form method="post">
+                {%csrf_token%}
+                <input class="btn-primary btn-lg" type="submit" name="jouer" value="Je veux grimper au classement">
+            </form>
+        </div>
+    </div>
+</div>
+{%endblock%}

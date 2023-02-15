@@ -1,0 +1,80 @@
+{% extends 'form_content.html' %}
+{% block content %}
+<div class="row" style="margin-right:0px">
+    <div class="row" style="padding-right:0px">
+        <div class="col-12 d-flex flex-row justify-content-between" style="padding-right:0px;z-index: 3;">
+            <form method="post">
+                {%csrf_token%}
+                <input
+                    style="font-family: 'JetBrains Mono';font-size: 14px;color:#5C5B5B;text-decoration: underline;background-color: transparent;border-width: 0px;margin-top:1%;height:20px;margin-left:1%"
+                    type="submit" name="quit" value="< Quitter">
+            </form>
+            {% include 'partials/player_profile.html'%}
+        </div>
+    </div>
+    <div class="row d-flex flex-row justify-content-center">
+        <div class="col-xl-10 offset-lg-0 col-xl-offset-2 col-lg-10 col-md-12 col-sm-8 offset-sm-4"
+            style="margin-top:2%;z-index:3">
+            <div class="card ps-5 pt-5 pe-1 pb-1" style="border-radius: 30px;margin-bottom: 0px;">
+                <div class="card-body">
+                    <h1>NOS CONDITIONS GÉNÉRALES D'UTILISATION</h1>
+                    <p style="font-family:'Commissioner">Les informations recueillies sur ce formulaire sont
+                        enregistrées dans un fichier
+                        informatisé par Anton Sirgue,
+                        résidant à Londres, E1W3BG, et joignable à l’adresse électronique absirgue@gmail.com pour mettre
+                        au point un produit
+                        destiné aux restaurateurs qui correspond au mieux à leurs besoins. La base légale du traitement
+                        est l’intérêt
+                        légitime.<br><br>
+                        Les données collectées seront communiquées aux seuls destinataires suivants : le responsable du
+                        traitement et son
+                        associé, Éric Bruyelle, résidant à Paris 75005.
+                        Les données sont conservées pendant une durée pouvant s’étaler sur une période d’un an. Leur
+                        analyse pourra être
+                        amenée, elle, être conservée sur une durée plus longue afin d’être présentée aux divers acteurs
+                        concernés. Cette
+                        analyse sera purement anonyme et toute donnée nominative sera supprimée sauf dans le cas ou le
+                        propriétaire de ces
+                        données aura manifesté explicitement son intention d’être alerté à la sortie du produit, auquel
+                        cas des données
+                        telles que ses coordonnées et certaines des préférences indiquées pourront être transférée à la
+                        plateforme produit
+                        et leur traitement sera donc à considérer dans le cadre de la politique de traitement des
+                        données de cette
+                        plateforme.<br><br>
+                        Vous pouvez accéder aux données vous concernant, les rectifier, demander leur effacement ou
+                        exercer votre droit à la
+                        limitation du traitement de vos données. Vous pouvez retirer à tout moment votre consentement au
+                        traitement de vos
+                        données. Vous pouvez également vous opposer au traitement de vos données. Vous pouvez également
+                        exercer votre droit
+                        à la portabilité de vos données. De manière générale, le responsable du traitement et son
+                        associé se veulent
+                        purement transparent et peuvent être contacté directement par courrier électronique pour toutes
+                        questions ou
+                        demandes.<br><br>
+                        Consultez le site cnil.fr pour plus d’informations sur vos droits.
+                        Pour exercer ces droits ou pour toute question sur le traitement de vos données dans ce
+                        dispositif, vous pouvez
+                        contacter : absirgue@gmail.com, 0767949166.
+                        Si vous estimez, après nous avoir contactés, que vos droits « Informatique et Libertés » ne sont
+                        pas respectés, vous
+                        pouvez adresser une réclamation à la CNIL.
+                    </p>
+                    <div class="col-12 d-flex flex-row justify-content-end align-items-baseline">
+                        <p style="font-family:'Commissioner';color:#5C5B5B;margin-right:10px">Une question, une
+                            réclamation, un quelconque
+                            besoin?</p>
+                        <a style="color:black;font-family: 'Commissioner';"
+                            href="mailto:hello.cuisine@outlook.com?subject=Demande Conditions Générales d'Utilisation">Nous
+                            Contacter</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <img src="../../static/casserole_3D.png"
+        style="width:275px; height:auto;transform: rotate(40deg);margin-right:30px;margin-bottom: 20px;position:fixed;bottom:0px;right:0px;margin-right:40px;z-index:1">
+</div>
+{%endblock%}

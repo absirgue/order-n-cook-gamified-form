@@ -1,0 +1,27 @@
+{% extends 'form_content.html' %}
+{% block content %}
+<div class="container" style="margin-right:0px">
+    <div class="row">
+        <div class="col-12 d-flex flex-row justify-content-end">
+            <div style="margin-top:12px;width: 222px;
+        height: 87px;border-radius: 30px;padding:15px;z-index:5">
+            </div>
+        </div>
+    </div>
+    <div class="row d-flex flex-row justify-content-start">
+        <div class="col-xl-10 offset-lg-0 col-xl-offset-2 col-lg-10 col-md-12 col-sm-8 offset-sm-4"
+            style="margin-top:2%;z-index:3">
+            <div class="card ps-5 pt-5 pe-1 pb-1" style="border-radius: 30px;margin-bottom: 0px;">
+                <div class="card-body">
+                    {% block form%}{%endblock%}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <img src="../../static/casserole_3D.png"
+        style="width:275px; height:auto;transform: rotate(40deg);margin-right:30px;margin-bottom: 20px;position:fixed;bottom:0px;right:0px;margin-right:40px;z-index:1">
+</div>
+
+</div>
+{%endblock%}

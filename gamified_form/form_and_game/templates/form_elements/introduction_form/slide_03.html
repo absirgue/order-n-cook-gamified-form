@@ -2,8 +2,18 @@
 {%block form_content%}
 Dans mon restaurant, les recettes sont mémorisées {{form.support_memorisation}}. Ce système répond à tous mes besoins
 {{form.satisfait_support_memorisation}}.
-<br>J'estime que nous passons {{form.temps_passe_par_mois}} heures par mois à mémoriser nos recettes. Je trouve cela
+<br>J'estime que nous passons {{form.temps_passe_minute_par_recette}} minutes à mémoriser une recette. Je trouve cela
 trop long {{form.est_ce_trop}}.
 <br>Lorsque notre équipe ou notre carte change, nous transmettons le savoir du restaurant
 {{form.methode_transmission_savoir}}. Cette méthode répond à tous mes besoins {{form.satisfait_mode_transmission}}.
+{% if form.errors %}
+{%if form.non_field_errors%}
+<p style="color:rgb(248, 101, 160)">{{form.non_field_errors}}</p>
+{%endif%}
+{% for field in form %}
+{% for error in field.errors %}
+<p style="color:rgb(248, 101, 160)"> {{ errors }} </p>
+{% endfor %}
+{% endfor %}
+{% endif %}
 {%endblock%}

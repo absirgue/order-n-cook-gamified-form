@@ -6,6 +6,7 @@
         linear-gradient(to bottom, #E5E5F8 1px, transparent 1px);
 }
 
+
 .ring_outsider {
     position: absolute;
     width: 425px;
@@ -58,10 +59,45 @@ h1 {
     padding: 12px 45px 12px 45px;
     box-shadow: none;
     border-width: 0px;
+    font-size: 18px;
 }
 
 .btn-primary:hover {
     background: #6f6cfd;
+}
+
+.btn-secondary {
+    border-radius: 30px;
+    font-family: "JetBrains Mono";
+    color: black;
+    padding: 10px 30px 10px 30px;
+    box-shadow: none;
+    border-width: 2px;
+    border-color: #B6B5FF;
+    background-color: white;
+    font-size: 18px;
+}
+
+.btn-secondary:hover {
+    background: #b9b8f4;
+    border-color: #B6B5FF;
+}
+
+.btn-secondary-small {
+    border-radius: 30px;
+    font-family: "JetBrains Mono";
+    color: black;
+    padding: 10px 25px 10px 25px;
+    box-shadow: none;
+    border-width: 2px;
+    border-color: #B6B5FF;
+    background-color: white;
+    font-size: 18px;
+}
+
+.btn-secondary-small:hover {
+    background: #b9b8f4;
+    border-color: #B6B5FF;
 }
 
 .default-input {
@@ -88,4 +124,38 @@ h1 {
 
 .register-input:placeholder-shown {
     font-style: italic;
+}
+
+.other-form-input {
+    border-radius: 30px;
+    font-family: "Commissioner";
+    color: black;
+    padding: 5px 8px 5px 8px;
+    box-shadow: none;
+    border-width: 2px;
+    border-color: #B6B5FF;
+    background-color: white;
+    font-size: 18px;
+    margin: 5px
+}
+
+.log_in_fields {
+    height: 35px;
+    margin-top: 20px;
+    z-index: 5;
+}
+
+.discrete_button {
+    font-family: 'JetBrains Mono';
+    font-size: 12px;
+    color: #a2a2a2;
+    background-color: transparent;
+    border-width: 0px;
+    margin-top: 1%;
+    height: 20px;
+    margin-left: 1%
+}
+
+.discrete_button:hover {
+    text-decoration: underline;
 }

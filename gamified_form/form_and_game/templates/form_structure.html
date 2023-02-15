@@ -3,7 +3,8 @@
 <div class="row">
     <div class="d-flex flex-row justify-content-between flex-wrap">
         <h1>{{title}}</h1>
-        <h1>{{pages_seen_indicator}}<span class="grey_progress_indicator">{{pages_left_indicator}}</span></h1>
+        <h1>{{pages_seen_indicator}}<span class="grey_progress_indicator">{{pages_left_indicator}}</span><span
+                style="font-size:14px">{{progress_counter_display}}</span></h1>
     </div>
 </div>
 <form method="post">
@@ -17,7 +18,7 @@
     </div>
     <div class="row">
         <div class="col-12 d-flex flex-row justify-content-end">
-            <input class="btn-primary" type="submit">
+            <input class="btn-primary" type="submit" value="Suivant">
         </div>
     </div>
 </form>

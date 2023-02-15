@@ -1,0 +1,70 @@
+{% extends 'form_content.html' %}
+{% block content %}
+<div class="container" style="margin-right:0px">
+    <div class="row">
+        <div class="col-12 d-flex flex-row justify-content-end">
+            {% include 'partials/player_profile.html'%}
+        </div>
+    </div>
+    <div class="row d-flex flex-row justify-content-start">
+        <div class="col-xl-10 offset-lg-0 col-xl-offset-2 col-lg-10 col-md-12 col-sm-8 offset-sm-4"
+            style="margin-top:2%;z-index:3">
+            <div class="card ps-5 pt-5 pe-1 pb-1" style="border-radius: 30px;margin-bottom: 0px;">
+                <div class="card-body">
+                    {% block form%}{%endblock%}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <img src="../../static/casserole_3D.png"
+        style="width:275px; height:auto;transform: rotate(40deg);margin-right:30px;margin-bottom: 20px;position:fixed;bottom:0px;right:0px;margin-right:40px;z-index:1">
+</div>
+
+<div class="modal fade" id="link_copy_modal">
+    <div class="modal-dialog" style="max-width:800px;">
+        <div class="modal-content" style="border-width: 2px;border-radius: 40px;border-color: #4846FF;">
+            <form method="post">
+                {%csrf_token%}
+                <div class="modal-body" style="padding-top:5%">
+                    <div class="row d-flex flex-row justify-content-end">
+                        <div class="col-12 d-flex flex-column justify-content-center">
+                            <h1 style="text-align:center;margin-bottom: 3px;">🏆 PARTAGEZ VOS PERFORMANCES!</h1>
+                            <p
+                                style="margin-top:0px;color:#5C5B5B;font-size: 18px;font-family: 'Commissioner';margin-top: 2%;max-width: 800px;text-align: center;margin-bottom: 0px;">
+                                Transmettez simplement ce lien à vos collègues dans la restauration qui pourront vous
+                                féciliter, vous payer un pot, et valider vos points bonus!</p>
+                            <div class="col-12 d-flex flex-row justify-content-center">
+                                <button onclick="CopyText()" class="btn-secondary"
+                                    style="max-width:350px;margin-top:10px">Copier le lien</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row d-flex flex-row justify-content-end">
+                        <p
+                            style="margin-top:0px;color:#5C5B5B;font-size: 18px;font-family: 'Commissioner';margin-top: 2%;max-width: 800px;margin-bottom: 0px;">
+                            Vous préferez qu'on s'occupe d'envoyer un e-mail ?</p>
+                        <div class="col-12 d-flex flex-row justify-content-center">
+                            <form method="post">
+                                <input style="width:35%;margin-right:10px" type="text" name="email"
+                                    class="default-input" placeholder="E-mail" required>
+                                <input type="submit" name="send_email" class="btn-secondary-small" value="Envoyez!">
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% block scripts %}
+<script>
+    function CopyText() {
+        if (navigator && navigator.clipboard && navigator.clipboard.writeText)
+            return navigator.clipboard.writeText("{{url_to_copy}}");
+    }
+</script>
+{% endblock scripts %}
+
+{%endblock%}

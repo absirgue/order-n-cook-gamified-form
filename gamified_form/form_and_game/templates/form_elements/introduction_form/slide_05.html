@@ -3,12 +3,22 @@
 Pour valider le paiement de mes factures, {{form.methode_validation_paiement}}.
 <br>
 J'arrive à les analyser ligne à ligne {{form.analyse_ligne_a_ligne_possible}}.
-Si non, je pense qu'un outil d'analyse précis du ligne à ligne de mes factures pourrait me permettre de gagner
-{{form.gain_estime_si_ligne_a_ligne}}.
+Je pense qu'un outil d'analyse précis et automatisé du ligne à ligne de mes factures pourrait me permettre de gagner
+{{form.gain_estime_si_ligne_a_ligne}} minutes par {{form.unite_gain_ligne_a_ligne}}.
 <br>
 Je parviens à connaître la moyenne chiffrée de mes achats {{form.connaissance_moyenne_chiffree_des_achats}}.
 <br>
 En plus de la valeur de mes achats, j'arrive à garder en mémoire et à analyser la répartition de mes achats par
 catégorie {{form.connaissance_repartition_par_categorie}}, par fournisseur
 {{form.connaissance_quantite_par_fournisseur}}.
+{% if form.errors %}
+{%if form.non_field_errors%}
+<p style="color:rgb(248, 101, 160)">{{form.non_field_errors}}</p>
+{%endif%}
+{% for field in form %}
+{% for error in field.errors %}
+<p style="color:rgb(248, 101, 160)"> {{ errors }} </p>
+{% endfor %}
+{% endfor %}
+{% endif %}
 {%endblock%}

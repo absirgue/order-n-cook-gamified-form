@@ -1,4 +1,4 @@
-{%extends 'form_page.html'%}
+{%extends 'form_page_no_profile.html'%}
 {%block form%}
 <div class="row">
     <div class="d-flex flex-row justify-content-center flex-wrap">
@@ -21,4 +21,14 @@
         </div>
     </div>
 </form>
+{% if form.errors %}
+{%if form.non_field_errors%}
+<p style="color:rgb(248, 101, 160)">{{form.non_field_errors}}</p>
+{%endif%}
+{% for field in form %}
+{% for error in field.errors %}
+<p style="color:rgb(248, 101, 160)"> {{ errors }} </p>
+{% endfor %}
+{% endfor %}
+{% endif %}
 {%endblock%}

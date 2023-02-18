@@ -36,5 +36,6 @@ urlpatterns = [
     path('game_home/',views.game_home,name='game_home'),
     path('conditions_generales/',views.conditions_generales,name='conditions_generales'),
     path('admin_home/',views.admin_page,name='admin_page'),
+    path('error_404/',views.error_404,name='error_404'),
     path('',views.log_in,name='home'),
 ]

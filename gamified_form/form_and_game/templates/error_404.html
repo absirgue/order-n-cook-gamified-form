@@ -1,0 +1,11 @@
+{%extends 'form_page.html'%}
+{%block form%}
+<div class="d-flex flex-column justify-content-center align-items-center">
+<h1>Page Itrouvable</h1>
+<p>Désolé, la page à laquelle vous tentez d'accéder n'existe pas.</p>
+<form method="post">
+    {%csrf_token%}
+    <input type="submit" class="btn-primary" name="retour" value="Retourner à l'accueil"/>
+</form>
+</div>
+{%endblock%}

@@ -70,9 +70,6 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def get_group(self):
         if self.is_administrator():
-            print(f"SUPER {self.is_superuser}")
-            print(f"STAFF {self.is_staff}")
-            print("IS ADMIN")
             return "Administrator"
         else:
             return "Player"

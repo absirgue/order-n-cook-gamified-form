@@ -156,9 +156,9 @@ def seventh_slide(request):
                 request_player.save()
                 return redirect('introduction_form_conclusion_slide')
             else:
-                return render(request, 'form_elements/introduction_form/slide_07.html', {"title": "Rien que pour toi", "pages_seen_indicator": ".......", "pages_left_indicator": "", "form": form,"player":request_player,"progress_counter_display":"(7/7)"})
+                return render(request, 'form_elements/introduction_form/slide_07.html', {"title": "Rien que pour vous", "pages_seen_indicator": ".......", "pages_left_indicator": "", "form": form,"player":request_player,"progress_counter_display":"(7/7)"})
         form = FonctionnalitesPrefereesForm()
-        return render(request, 'form_elements/introduction_form/slide_07.html', {"title": "Rien que pour toi", "pages_seen_indicator": ".......", "pages_left_indicator": "", "form": form,"player":request_player,"progress_counter_display":"(7/7)"})
+        return render(request, 'form_elements/introduction_form/slide_07.html', {"title": "Rien que pour vous", "pages_seen_indicator": ".......", "pages_left_indicator": "", "form": form,"player":request_player,"progress_counter_display":"(7/7)"})
 
 def conclusion_slide(request):
     request_player = Player.objects.get(user = request.user)

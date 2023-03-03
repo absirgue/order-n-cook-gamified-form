@@ -44,6 +44,7 @@ def register_player(request,sharer_code=""):
                         SharingAlert.objects.create(user = recommender,text=f"{user.full_name_no_comma()} a accepté votre invitation. Vous avez gagné 100 points!")
                 return redirect('introduction_form')
             else:
+                messages.add_message(request, messages.ERROR, "Merci de vérifier la validité des champs renseignés, notamment de votre adresse email.")
                 return render(request, 'form_elements/player_register/register_slide.html', {"title": "😊 Bienvenue, chef!", "user_register_form": user_register_form, "player_register_form": player_register_form})
         else:
             print("ERROR")
@@ -68,10 +69,12 @@ def game_home(request):
     ranking_to_display = get_ranking_to_display(ranking,request.user)
     points_to_gain_a_spot = get_points_to_person_before(ranking,request.user) +1 
     points_to_win = get_points_to_top_five(ranking,request.user) +1
+    try:
+        show_extra_info = not ranking_to_display[0]['is_user']
+    except:
+        show_extra_info = True
     request_player = Player.objects.get(user = request.user)
     if request.method == "POST":
-        print(request.POST)
-        print(request.POST)
         if request.POST.get("change_mdp"):
             if (request.POST.get("password") and request.POST.get("confirmation") and request.POST.get("accept_conditions")):
                 if (request.POST.get("password") == request.POST.get("confirmation")):
@@ -83,7 +86,7 @@ def game_home(request):
                     login(request, user)
                     messages.add_message(request, messages.SUCCESS, "Bienvenue dans la partie! Votre mot de passe a bien été changé.")
                 else:
-                    return render(request, 'main_game_page.html',{"ranking":ranking_to_display,"player":request_player,"points_to_gain_a_spot":points_to_gain_a_spot,"points_to_win":points_to_win,"mdp_error":"La confirmation diffère du mot de passe.","has_to_change_pwd":True,"url_to_copy":user_sharing_url})
+                    return render(request, 'main_game_page.html',{"show_extra_info":show_extra_info,"ranking":ranking_to_display,"player":request_player,"points_to_gain_a_spot":points_to_gain_a_spot,"points_to_win":points_to_win,"mdp_error":"La confirmation diffère du mot de passe.","has_to_change_pwd":True,"url_to_copy":user_sharing_url})
         elif request.POST.get("log_out"):
             return redirect('log_out')
         elif request.POST.get("precise_answers"):
@@ -96,14 +99,13 @@ def game_home(request):
         elif request.POST.get("send_email") and request.POST.get("email"):
             send_recommendation_email(request.user,request.POST.get("email"),user_sharing_url)
     number_of_autres_fields=get_number_of_questions_with_autres_answers(request_player)
-    print(f"NUMBER {number_of_autres_fields}")
     points_possible_by_removing_autres = number_of_autres_fields*NUMBER_POINTS_PER_NON_AUTRES_FIELDS
     time_needed_to_remove_autres = number_of_autres_fields/6.0
     if time_needed_to_remove_autres<1:
         time_needed_to_remove_autres = str(int(time_needed_to_remove_autres*60))+" sec."
     else:
         time_needed_to_remove_autres = str(int(time_needed_to_remove_autres))+" min."
-    return render(request, 'main_game_page.html',{"ranking":ranking_to_display,"player":request_player,"points_to_gain_a_spot":points_to_gain_a_spot,"points_to_win":points_to_win,"has_to_change_pwd":not request.user.accepted_conditions,"url_to_copy":user_sharing_url,"number_of_points_with_autres_form":points_possible_by_removing_autres,"time_for_autres_form":time_needed_to_remove_autres})
+    return render(request, 'main_game_page.html',{"show_extra_info":show_extra_info,"ranking":ranking_to_display,"player":request_player,"points_to_gain_a_spot":points_to_gain_a_spot,"points_to_win":points_to_win,"has_to_change_pwd":not request.user.accepted_conditions,"url_to_copy":user_sharing_url,"number_of_points_with_autres_form":points_possible_by_removing_autres,"time_for_autres_form":time_needed_to_remove_autres})
 
 
 def log_out(request):
@@ -190,10 +192,8 @@ def admin_page(request):
     number_calls_demanded = CallDemand.objects.all().count()
     average_value = get_average_value_awarded_to_our_product()
     most_looked_for_features = get_most_liked_features()  
-    print(most_looked_for_features)      
     user_sharing_url = f"{request.build_absolute_uri(reverse('register_player'))}{request.user.sharing_code}"
     if request.method=="POST":
-        print(request.POST)
         if request.POST.get("go_admin"):
             return redirect("/admin")
         elif request.POST.get("quit"):

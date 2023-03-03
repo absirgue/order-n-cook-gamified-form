@@ -242,18 +242,18 @@ class CommandeFormAnswer(models.Model):
         AUTRE = "Autre"
 
     class MethodesClassementAutres(models.TextChoices):
-        CLASSEUR = "classeur"
-        TRIEUR = "trieur"
-        ORDINATEUR = "ordinateur"
-        COMPTABILITE = "comptabilite", ("envoi à la comptabilité en direct")
+        CLASSEUR = "d'un classeur",("d'un classeur")
+        TRIEUR = "d'un trieur",("d'un trieur")
+        ORDINATEUR = "d'un ordinateur",("d'un ordinateur")
+        COMPTABILITE = "comptabilite", ("d'envois à la comptabilité en direct")
         NON_CONSERVEES = "non gardées", ("(je ne les garde pas)")
         AUTRE = "Autre"
     
     class MethodesClassementFactures(models.TextChoices):
-        CLASSEUR = "classeur"
-        TRIEUR = "trieur"
-        ORDINATEUR = "ordinateur"
-        COMPTABILITE = "comptabilite", ("envoi à la comptabilité en direct")
+        CLASSEUR = "d'un classeur",("d'un classeur")
+        TRIEUR = "d'un trieur",("d'un trieur")
+        ORDINATEUR = "d'un ordinateur",("d'un ordinateur")
+        COMPTABILITE = "comptabilite", ("d'envois à la comptabilité en direct")
         AUTRE = "Autre"
 
     class MethodesTransmissionFactures(models.TextChoices):
@@ -310,6 +310,7 @@ class ConnaissanceAchatFormAnswer(models.Model):
         DECADE = "Par décade",("par décade")
         MOIS = "Par mois",("par mois")
         AUTRE = "Autre",("autre")
+        NON = "Je n'y arrive pas", ("non, je ne la connais pas")
     
     class UnitesGainLigneALigne(models.TextChoices):
         JOUR = "jour",("jour")
@@ -377,7 +378,6 @@ class ComptaFormAnswer(models.Model):
     moyen_obtention_coefficients = models.CharField(
         choices=MoyensObtentionCoefficients.choices, blank=False, max_length=90)
     support_comptablitie = models.CharField(max_length=90, blank=False)
-    outil_utilise = models.CharField(max_length=60, blank=True)
     frequence_connaissance_coefficient = models.CharField(
         choices=FrequencesConnaissanceCoefficients.choices, blank=False, max_length=90)
     souhait_plus_de_regularite = models.CharField(
@@ -422,7 +422,7 @@ class FonctionnalitesPrefereesFormAnswer(models.Model):
     def clean(self):
         if self.premiere_fonctionnalite == self.deuxieme_fonctionnalite or self.deuxieme_fonctionnalite == self.troisieme_fonctionnalite or self.troisieme_fonctionnalite == self.premiere_fonctionnalite:
             raise ValidationError(
-                "Choisis trois fonctionnalités différentes, s'il te plaît!")
+                "Veuillez choisir trois fonctionnalités différentes s'il vous plaît!")
 
 
 class GeneralIntroductionFormAnswer(models.Model):
@@ -449,7 +449,7 @@ class GeneralIntroductionFormAnswer(models.Model):
         validators=[MinValueValidator(limit_value=0)], blank=False)
     nombre_cuisiniers = models.IntegerField(
         validators=[MinValueValidator(limit_value=0)], blank=False)
-    prix_moyen_assiette = models.DecimalField(decimal_places=2,
+    prix_moyen_couvert = models.DecimalField(decimal_places=2,
                                               validators=[MinValueValidator(limit_value=0)], blank=False, max_digits=5)
     nombre_etablissements = models.IntegerField(
         default=1, validators=[MinValueValidator(limit_value=1)])

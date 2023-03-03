@@ -38,3 +38,5 @@ urlpatterns = [
     path('admin_home/',views.admin_page,name='admin_page'),
     path('',views.log_in,name='home'),
 ]
+
+

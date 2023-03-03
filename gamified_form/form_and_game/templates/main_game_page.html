@@ -51,6 +51,7 @@
             <div class="p-3 pb-1" style="border-radius:40px;background-color:white;margin-top: 13%;">
                 <h1 style="text-align: center;margin-bottom: 5px;">🚀 MARQUEZ DES POINTS</h1>
                 <div class="col-12 d-flex flex-row justify-content-center">
+                    {%if show_extra_info%}
                     <p
                         style="color:#5C5B5B;font-size: 18px;font-family: 'Commissioner';margin-top: 2%;max-width: 550px;text-align: center;margin-bottom: 10px;">
                         <span style="font-weight:800;color:#4846FF">Vous êtes à {{points_to_gain_a_spot}} points</span>
@@ -61,6 +62,7 @@
                             pour les 6
                             premiers mois</span> sur notre plateforme!
                     </p>
+                    {%endif%}
                 </div>
                 <div class="col-12 d-flex flex-row justify-content-start align-items-end" style="margin-left:5%">
                     <button type="button" class="btn-secondary-small" data-bs-toggle="modal"

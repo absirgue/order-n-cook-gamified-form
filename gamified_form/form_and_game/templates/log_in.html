@@ -3,47 +3,15 @@
 {% include 'partials/messages.html' %}
 <!-- <div class="row" style="padding-left:0px!important"> -->
 <div class="d-flex flex-row justidy-content-center">
-    <div class="col-6 d-flex flex-column justify-content-between" style="padding:10px;padding-left:20px">
-        <p class="align-self-end"
-            style="vertical-align: center;margin-bottom: 0px;font-family: 'Commissioner';color:#5C5B5B;font-weight: 600;font-size:18px">
-            Suivi en temps
-            réel de la marge</p>
-        <p class="align-self-start"
-            style="vertical-align: center;margin-bottom: 0px;font-family: 'Commissioner';color:#5C5B5B;font-weight: 600;font-size:18px">
-            Relations fournisseurs</p>
-        <p class="align-self-center"
-            style="vertical-align: center;margin-bottom: 0px;font-family: 'Commissioner';color:#5C5B5B;font-weight: 600;font-size:18px">
-            Gestions des commandes</p>
-        <p class="align-self-end"
-            style="vertical-align: center;margin-bottom: 0px;font-family: 'Commissioner';color:#5C5B5B;font-weight: 600;font-size:18px">
-            Statistiques des achats</p>
-        <div class="col-12 d-flex flex-column justify-content-center align-items-center">
-            <h1 class="align-self-center" style="font-size:30px;margin-bottom:0px;font-weight: 800;">Order n'Cook</h1>
-            <h1 class="align-self-center" style="font-size:23px;text-align: center;">Optimisez votre entreprise, gagnez
-                du temps pour votre passion</h1>
-        </div>
-        <p class="align-self-start"
-            style="vertical-align: center;margin-bottom: 0px;font-family: 'Commissioner';color:#5C5B5B;font-weight: 600;font-size:18px">
-            Mémorisation des recettes</p>
-        <p class="align-self-end"
-            style="vertical-align: center;margin-bottom: 0px;font-family: 'Commissioner';color:#5C5B5B;font-weight: 600;font-size:18px">
-            Prémunission du turnover</p>
-        <p class="align-self-center"
-            style="vertical-align: center;margin-bottom: 0px;font-family: 'Commissioner';color:#5C5B5B;font-weight: 600;font-size:18px">
-            Indépendance totale de votre système</p>
-        <p class="align-self-start"
-            style="vertical-align: center;margin-bottom: 0px;font-family: 'Commissioner';color:#5C5B5B;font-weight: 600;font-size:18px">
-            Traçabilité et interface clients</p>
-    </div>
-    <div class="vh-100 col-6" style="background-color: white" style="padding-left:0px">
+    <div class="vh-100 col-12" style="background-color: #F5F5FA" style="padding-left:0px">
         <div class="ring_outsider" style="z-index:3"></div>
-        <div class="ring_insider" style="z-index:3"></div>
+        <div class="ring_insider_home" style="z-index:3"></div>
         <div class="vh-100 row d-flex flex-row justify-content-center">
             <div class="col-8 d-flex flex-column justify-content-center align-items-center">
                 <h1 style="text-align: center;margin-bottom: 0px;z-index: 5;">👋 Bienvenue!</h1>
                 <p style="text-align: center;color:#5C5B5B;font-family: 'Commissioner';font-size:16px;z-index: 5;">Nous
                     sommes
-                    heureux de vous revoir.</p>
+                    heureux de vous voir.</p>
                 <form method="post">
                     {%csrf_token%}
                     <input type="hidden" name="next" value="{{ next }}">
@@ -69,12 +37,6 @@
                 </form>
                 </form>
             </div>
-            <div class="col-12 d-flex flex-row justify-content-start">
-                <img src="../../static/images/restaurant_3D.png"
-                    style="width:15%; height:auto;transform: rotate(15deg);margin-right:30px;margin-bottom: 20px;position:fixed;bottom:0px;right:0px;margin-right:40px;z-index:1;;z-index:3">
-            </div>
-
-
         </div>
     </div>
 

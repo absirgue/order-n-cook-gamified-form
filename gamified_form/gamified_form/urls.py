@@ -39,3 +39,7 @@ urlpatterns = [
     path('error_404/',views.error_404,name='error_404'),
     path('',views.log_in,name='home'),
 ]
+
+
+handler404 = 'form_and_game.views.error_404'
+

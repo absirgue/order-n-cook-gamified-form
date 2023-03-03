@@ -34,7 +34,7 @@ class PasswordEditForm(forms.ModelForm):
 class ComptaForm(forms.ModelForm):
     class Meta:
         model = ComptaFormAnswer
-        fields = ['moyen_obtention_coefficients', 'support_comptablitie', 'outil_utilise',
+        fields = ['moyen_obtention_coefficients', 'support_comptablitie',
                   'frequence_connaissance_coefficient', 'souhait_plus_de_regularite', 'depense_moyenne_obtention_bilan', 'depense_consentie_notre_version']
 
     def __init__(self, *args, **kwargs):
@@ -42,10 +42,8 @@ class ComptaForm(forms.ModelForm):
         for field_name in self.fields:
             self.fields[field_name].widget.attrs.update(
                 {'class': 'default-input'})
-        self.fields['outil_utilise'].widget.attrs.update(
-            {'placeholder': 'nom du logiciel'})
         self.fields['support_comptablitie'].widget.attrs.update(
-            {'placeholder': 'support de comptabilité'})
+            {'placeholder': "nom de l'outil"})
 
     def save(self, _user):
         """Create a new user"""
@@ -56,8 +54,6 @@ class ComptaForm(forms.ModelForm):
                 'moyen_obtention_coefficients'),
             support_comptablitie=self.cleaned_data.get(
                 'support_comptablitie'),
-            outil_utilise=self.cleaned_data.get(
-                'outil_utilise'),
             frequence_connaissance_coefficient=self.cleaned_data.get(
                 'frequence_connaissance_coefficient'),
             souhait_plus_de_regularite=self.cleaned_data.get(
@@ -197,7 +193,7 @@ class GeneralInformationForm(forms.ModelForm):
         """Form options."""
         model = GeneralIntroductionFormAnswer
         fields = ['metier', 'ville', 'age', 'nombre_couverts',
-                  'nombre_cuisiniers', 'prix_moyen_assiette', 'nombre_etablissements', 'experience', 'nombre_places']
+                  'nombre_cuisiniers', 'prix_moyen_couvert', 'nombre_etablissements', 'experience', 'nombre_places']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -216,7 +212,7 @@ class GeneralInformationForm(forms.ModelForm):
             {'placeholder': 'nombre de places'})
         self.fields['nombre_cuisiniers'].widget.attrs.update(
             {'placeholder': 'nombre de cuisiniers'})
-        self.fields['prix_moyen_assiette'].widget.attrs.update(
+        self.fields['prix_moyen_couvert'].widget.attrs.update(
             {'placeholder': 'prix moyen'})
 
     def save(self, _user):
@@ -231,7 +227,7 @@ class GeneralInformationForm(forms.ModelForm):
             nombre_couverts=self.cleaned_data.get('nombre_couverts'),
             nombre_places=self.cleaned_data.get('nombre_places'),
             nombre_cuisiniers=self.cleaned_data.get('nombre_cuisiniers'),
-            prix_moyen_assiette=self.cleaned_data.get('prix_moyen_assiette'),
+            prix_moyen_couvert=self.cleaned_data.get('prix_moyen_couvert'),
             nombre_etablissements=self.cleaned_data.get(
                 'nombre_etablissements'),
         )

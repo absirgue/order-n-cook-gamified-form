@@ -229,7 +229,7 @@ def admin_page(request):
     except:
         return redirect('error_404')
 
-def error_404(request,exception):
+def error_404(request,exception=None):
     if request.method =="POST":
         return redirect('game_home')
     return render(request,'error_404.html')

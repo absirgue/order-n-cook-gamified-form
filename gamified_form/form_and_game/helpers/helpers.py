@@ -99,7 +99,10 @@ def get_average_value_awarded_to_our_product():
     for record in records:
         total += record.depense_consentie_notre_version
         count +=1
-    return round(total/count,2)
+    if count > 0:
+        return round(total/count,2)
+    else: 
+        return '-' 
 
 def get_most_liked_features():
     records = FonctionnalitesPrefereesFormAnswer.objects.all()

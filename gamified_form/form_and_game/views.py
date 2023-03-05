@@ -226,7 +226,8 @@ def admin_page(request):
                     return generate_extra_info_data_csv_response()
             
         return render(request,'admin_home.html',{"url_to_share":user_sharing_url,"number_users":number_users,"number_shares":number_shares,"number_calls_demanded":number_calls_demanded,"average_value":average_value,"most_looked_for_features":most_looked_for_features})
-    except:
+    except Exception as e:
+        return HttpResponse(e)
         return redirect('error_404')
 
 def error_404(request,exception=None):

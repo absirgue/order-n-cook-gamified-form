@@ -35,7 +35,7 @@ class Command(BaseCommand):
                 user = _user,
                 points = self.number_points_after_introduction_form + randint((i-1)*100,(i*100)) + randint(1,50),
             )   
-            GeneralIntroductionFormAnswer.objects.create(player=player,ville=VILLES[randint(0,len(VILLES)-1)],metier="Chef de cuisine et pâtissier propriétaire",age=12,experience=12,nombre_couverts=13,nombre_places=15,nombre_cuisiniers=13,prix_moyen_assiette=25)
+            GeneralIntroductionFormAnswer.objects.create(player=player,ville=VILLES[randint(0,len(VILLES)-1)],metier="Chef de cuisine et pâtissier propriétaire",age=12,experience=12,nombre_couverts=13,nombre_places=15,nombre_cuisiniers=13,prix_moyen_couvert=25)
 
     
     def create_lower_ranked_players(self):
@@ -45,7 +45,7 @@ class Command(BaseCommand):
                 user = _user,
                 points = self.number_points_after_introduction_form - randint(1,self.number_points_after_introduction_form//10)*10,
             )   
-            GeneralIntroductionFormAnswer.objects.create(player=player,ville=VILLES[randint(0,len(VILLES)-1)],metier="Chef de cuisine et pâtissier propriétaire",age=12,experience=12,nombre_couverts=13,nombre_places=15,nombre_cuisiniers=13,prix_moyen_assiette=25)
+            GeneralIntroductionFormAnswer.objects.create(player=player,ville=VILLES[randint(0,len(VILLES)-1)],metier="Chef de cuisine et pâtissier propriétaire",age=12,experience=12,nombre_couverts=13,nombre_places=15,nombre_cuisiniers=13,prix_moyen_couvert=25)
    
     def create_random_user(self):
         _first_name = self.faker.first_name(),

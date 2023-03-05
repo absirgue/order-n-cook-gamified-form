@@ -49,9 +49,9 @@ def generate_all_answer_data_csv_response():
                                  "[RECETTES] Support Memorisation","[RECETTES] Satisfait par ce Support?","[RECETTES] Temps Passe (min/recette)","[RECETTES] Est-ce-trop?","[RECETTES] Methode Transmission du Savoir","[RECETTES] Satisfait par ce Mode de Transmission?",
                                  "[COMMANDES] Methode Passage Commandes","[COMMANDES] Frequence Passage Commandes","[COMMANDES] Temps Passe par Jour","[COMMANDES] Temps Ideal par Jour",
                                  "[COMMANDES] Support Memorisation","[COMMANDES] Methode Classement des Commandes","[COMMANDES] Methode Classement des Bons de Livraison","[COMMANDES] Methode Classement des Factures","[COMMANDES] Methode Transmission des Factures","[COMMANDES] Proportion Factures par Mail","[COMMANDES] Nombre Fournisseurs",
-                                 "[COMPTA] Moyen Obtention Coefficient","[COMPTA] Support Comptabilite","[COMPTA] Outil Utilise","[COMPTA] Frequence Connaissance Coefficient","[COMPTA] Souhait de Plus de Regularite?","[COMPTA] Depense Moyenne pour Obtention Bilan","[COMPTA] Unite","[COMPTA] Prix Consenti pour Notre Plateforme",
+                                 "[COMPTA] Moyen Obtention Coefficient","[COMPTA] Outil Utilise","[COMPTA] Frequence Connaissance Coefficient","[COMPTA] Souhait de Plus de Regularite?","[COMPTA] Depense Moyenne pour Obtention Bilan","[COMPTA] Unite","[COMPTA] Prix Consenti pour Notre Plateforme",
                                  "[PREFERENCES] Premiere Fonctionnalite Preferee","[PREFERENCES] Deuxieme Fonctionnalite Preferee","[PREFERENCES] Troisieme Fonctionnalite Preferee",
-                                  "[GENERAL] Metier","[GENERAL] Age","[GENERAL] Experience","[GENERAL] Nombre Couverts","[GENERAL] Nombre Places","[GENERAL] Nombre Cuisiniers","[GENERAL] Prix Moyen Assiette","[GENERAL] Nombre Etablissements"])
+                                  "[GENERAL] Metier","[GENERAL] Age","[GENERAL] Experience","[GENERAL] Nombre Couverts","[GENERAL] Nombre Places","[GENERAL] Nombre Cuisiniers","[GENERAL] Prix Moyen Couvert","[GENERAL] Nombre Etablissements"])
     users = User.objects.all()
     for user in users:
         if not (user.is_staff or user.is_superuser or user.randomly_created):
@@ -93,7 +93,6 @@ def generate_all_answer_data_csv_response():
 
                                              f"{value_or_blank_value(compta_form.moyen_obtention_coefficients)}",
                                              f"{value_or_blank_value(compta_form.support_comptablitie)}",
-                                             f"{value_or_blank_value(compta_form.outil_utilise)}",
                                              f"{value_or_blank_value(compta_form.frequence_connaissance_coefficient)}",
                                              f"{value_or_blank_value(compta_form.souhait_plus_de_regularite)}",
                                              f"{value_or_blank_value(compta_form.depense_moyenne_obtention_bilan)}",
@@ -110,7 +109,7 @@ def generate_all_answer_data_csv_response():
                                               f"{value_or_blank_value(general_info_form.nombre_couverts)}",
                                               f"{value_or_blank_value(general_info_form.nombre_places)}",
                                               f"{value_or_blank_value(general_info_form.nombre_cuisiniers)}",
-                                              f"{value_or_blank_value(general_info_form.prix_moyen_assiette)}",
+                                              f"{value_or_blank_value(general_info_form.prix_moyen_couvert)}",
                                               f"{value_or_blank_value(general_info_form.nombre_etablissements)}",
                                              ])
             except Exception as e:
